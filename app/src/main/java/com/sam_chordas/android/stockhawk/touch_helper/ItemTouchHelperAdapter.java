@@ -9,5 +9,5 @@ import android.view.View;
  */
 public interface ItemTouchHelperAdapter {
 
-  void onItemDismiss(int position);
+    void onItemDismiss(int position);
 }
