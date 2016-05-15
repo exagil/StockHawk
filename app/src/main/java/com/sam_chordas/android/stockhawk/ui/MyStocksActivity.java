@@ -37,6 +37,7 @@ import com.melnykov.fab.FloatingActionButton;
 import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallback;
 
 public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+    public static final String PERIODIC = "periodic";
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -86,8 +87,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 new RecyclerViewItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View v, int position) {
-                        //TODO:
-                        // do something on item click
+                        startActivity(new Intent(getApplicationContext(), StockDetailActivity.class));
                     }
                 }));
         recyclerView.setAdapter(mCursorAdapter);
@@ -141,7 +141,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         if (isConnected) {
             long period = 3600L;
             long flex = 10L;
-            String periodicTag = "periodic";
 
             // create a periodic task to pull stocks once every hour after the app has been opened. This
             // is so Widget data stays up to date.
@@ -149,7 +148,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                     .setService(StockTaskService.class)
                     .setPeriod(period)
                     .setFlex(flex)
-                    .setTag(periodicTag)
+                    .setTag(PERIODIC)
                     .setRequiredNetwork(Task.NETWORK_STATE_CONNECTED)
                     .setRequiresCharging(false)
                     .build();
