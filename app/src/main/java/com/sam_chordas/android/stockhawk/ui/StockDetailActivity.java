@@ -9,9 +9,13 @@ import android.support.v7.app.AppCompatActivity;
 import com.sam_chordas.android.stockhawk.StockDetailView;
 import com.sam_chordas.android.stockhawk.StockHawkApp;
 import com.sam_chordas.android.stockhawk.StockNetworkService;
+import com.sam_chordas.android.stockhawk.StockService;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.data.StockLoaderService;
+import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -20,6 +24,7 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
     public StockNetworkService stockNetworkService;
     @Inject
     public Context context;
+    private StockDetailPresenter stockDetailPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,7 +37,8 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
         quoteCursor.moveToFirst();
         String quoteSymbol = quoteCursor.getString(quoteCursor.getColumnIndex(QuoteColumns.SYMBOL));
         StockLoaderService stockLoaderService = new StockLoaderService(context);
-        StockDetailPresenter stockDetailPresenter = new StockDetailPresenter(this, stockLoaderService, stockNetworkService);
+        StockService stockService = new StockService(stockNetworkService);
+        stockDetailPresenter = new StockDetailPresenter(this, stockLoaderService, stockService);
     }
 
     private boolean doesQuoteNotExist(Cursor quote) {
@@ -41,11 +47,15 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
 
     @Override
     public void onSymbolLoaded(String quoteSymbol) {
-
     }
 
     @Override
     public void onSymbolLoadFailed() {
+
+    }
+
+    @Override
+    public void onHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes) {
 
     }
 }

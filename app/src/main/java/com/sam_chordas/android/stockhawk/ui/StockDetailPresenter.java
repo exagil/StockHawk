@@ -1,18 +1,21 @@
 package com.sam_chordas.android.stockhawk.ui;
 
 import com.sam_chordas.android.stockhawk.StockDetailView;
-import com.sam_chordas.android.stockhawk.StockNetworkService;
+import com.sam_chordas.android.stockhawk.StockService;
 import com.sam_chordas.android.stockhawk.data.StockLoaderService;
+import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
+
+import java.util.List;
 
 public class StockDetailPresenter {
     private StockDetailView stockDetailView;
     private final StockLoaderService stockLoaderService;
-    private final StockNetworkService stockNetworkService;
+    private final StockService stockService;
 
-    public StockDetailPresenter(StockDetailView stockDetailView, StockLoaderService stockLoaderService, StockNetworkService stockNetworkService) {
+    public StockDetailPresenter(StockDetailView stockDetailView, StockLoaderService stockLoaderService, StockService stockService) {
         this.stockDetailView = stockDetailView;
         this.stockLoaderService = stockLoaderService;
-        this.stockNetworkService = stockNetworkService;
+        this.stockService = stockService;
     }
 
     public void loadQuoteSymbolForQuoteId(int quoteId) {
@@ -25,6 +28,15 @@ public class StockDetailPresenter {
             @Override
             public void onQuoteSymbolLoadFailed() {
                 stockDetailView.onSymbolLoadFailed();
+            }
+        });
+    }
+
+    public void loadHistoricalQuotes(String stockSymbol) {
+        stockService.loadHistoricalQuotes(stockSymbol, new StockService.HistoricalQuotesCallback() {
+            @Override
+            public void onHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes) {
+                stockDetailView.onHistoricalQuotesLoaded(historicalQuotes);
             }
         });
     }
