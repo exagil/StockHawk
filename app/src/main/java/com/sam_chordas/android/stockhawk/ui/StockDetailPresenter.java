@@ -4,6 +4,7 @@ import com.sam_chordas.android.stockhawk.StockDetailView;
 import com.sam_chordas.android.stockhawk.StockService;
 import com.sam_chordas.android.stockhawk.data.StockLoaderService;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
+import com.sam_chordas.android.stockhawk.data.models.NetworkError;
 
 import java.util.List;
 
@@ -37,6 +38,11 @@ public class StockDetailPresenter {
             @Override
             public void onHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes) {
                 stockDetailView.onHistoricalQuotesLoaded(historicalQuotes);
+            }
+
+            @Override
+            public void onHistoricalQuotesLoadFailure(NetworkError networkError) {
+                stockDetailView.onHistoricalQuotesLoadFailure(networkError.error());
             }
         });
     }

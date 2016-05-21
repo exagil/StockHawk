@@ -2,6 +2,7 @@ package com.sam_chordas.android.stockhawk;
 
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotesResponse;
+import com.sam_chordas.android.stockhawk.data.models.NetworkError;
 
 import java.text.ParseException;
 import java.util.List;
@@ -30,12 +31,14 @@ public class StockService {
 
             @Override
             public void onFailure(Call<HistoricalQuotesResponse> call, Throwable t) {
-
+                callback.onHistoricalQuotesLoadFailure(new NetworkError(t));
             }
         });
     }
 
     public interface HistoricalQuotesCallback {
         void onHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes);
+
+        void onHistoricalQuotesLoadFailure(NetworkError networkError);
     }
 }

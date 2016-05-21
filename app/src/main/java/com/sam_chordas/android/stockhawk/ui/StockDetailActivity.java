@@ -58,4 +58,9 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
     public void onHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes) {
 
     }
+
+    @Override
+    public void onHistoricalQuotesLoadFailure(String s) {
+
+    }
 }

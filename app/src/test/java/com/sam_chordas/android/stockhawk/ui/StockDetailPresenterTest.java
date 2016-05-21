@@ -5,6 +5,7 @@ import com.sam_chordas.android.stockhawk.StockNetworkService;
 import com.sam_chordas.android.stockhawk.StockService;
 import com.sam_chordas.android.stockhawk.data.StockLoaderService;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
+import com.sam_chordas.android.stockhawk.data.models.NetworkError;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -77,5 +78,21 @@ public class StockDetailPresenterTest {
         }).when(stockService).loadHistoricalQuotes(eq("YHOO"), Matchers.<StockService.HistoricalQuotesCallback>any());
         stockDetailPresenter.loadHistoricalQuotes("YHOO");
         verify(stockDetailView).onHistoricalQuotesLoaded(historicalQuotes);
+    }
+
+    @Test
+    public void shouldShowErrorWhenNotAbleToLoadHistoricalQuotes() {
+        Throwable t = new Throwable("Some Error");
+        final NetworkError networkError = new NetworkError(t);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                StockService.HistoricalQuotesCallback callback = (StockService.HistoricalQuotesCallback) invocation.getArguments()[1];
+                callback.onHistoricalQuotesLoadFailure(networkError);
+                return null;
+            }
+        }).when(stockService).loadHistoricalQuotes(eq("YHOO"), Matchers.<StockService.HistoricalQuotesCallback>any());
+        stockDetailPresenter.loadHistoricalQuotes("YHOO");
+        verify(stockDetailView).onHistoricalQuotesLoadFailure("Some Error");
     }
 }
