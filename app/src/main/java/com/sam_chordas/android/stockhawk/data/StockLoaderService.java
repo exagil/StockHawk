@@ -12,7 +12,7 @@ public class StockLoaderService {
         contentResolver = context.getContentResolver();
     }
 
-    public void loadQuoteSymbolForQuoteId(final int quoteId, final QuoteSymbolLoaderCallback callback) {
+    public void loadQuoteSymbolForQuoteId(final long quoteId, final QuoteSymbolLoaderCallback callback) {
         final Cursor symbolCursor = contentResolver.query(QuoteProvider.Quotes.CONTENT_URI,
                 new String[]{QuoteColumns.SYMBOL},
                 "_id=?",

@@ -19,7 +19,7 @@ public class StockDetailPresenter {
         this.stockService = stockService;
     }
 
-    public void loadQuoteSymbolForQuoteId(int quoteId) {
+    public void loadQuoteSymbolForQuoteId(long quoteId) {
         stockLoaderService.loadQuoteSymbolForQuoteId(quoteId, new StockLoaderService.QuoteSymbolLoaderCallback() {
             @Override
             public void onQuoteSymbolLoaded(String quoteSymbol) {

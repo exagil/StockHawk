@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.StockNetworkService;
+import com.sam_chordas.android.stockhawk.StockService;
 
 import javax.inject.Singleton;
 
@@ -12,6 +13,7 @@ import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class NetworkModule {
@@ -27,6 +29,7 @@ public class NetworkModule {
     Retrofit providesRetrofit(Context context, OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
                 .baseUrl(context.getString(R.string.base))
+                .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
     }
@@ -35,5 +38,11 @@ public class NetworkModule {
     @Singleton
     StockNetworkService providesStockNetworkService(Retrofit retrofit) {
         return retrofit.create(StockNetworkService.class);
+    }
+
+    @Provides
+    @Singleton
+    StockService providesStockService(StockNetworkService stockNetworkService) {
+        return new StockService(stockNetworkService);
     }
 }
