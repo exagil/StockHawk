@@ -22,4 +22,8 @@ public class HistoricalQuote {
         this.volume = volume;
         this.adjClose = adjClose;
     }
+
+    public float dayHigh() {
+        return new Float(high);
+    }
 }
