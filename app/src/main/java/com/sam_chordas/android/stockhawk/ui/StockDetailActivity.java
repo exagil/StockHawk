@@ -40,7 +40,7 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
     }
 
     @Override
-    public void onSymbolLoaded(String yhoo) {
+    public void onSymbolLoaded(String quoteSymbol) {
 
     }
 

@@ -4,6 +4,7 @@ import com.sam_chordas.android.stockhawk.StockDetailView;
 import com.sam_chordas.android.stockhawk.StockNetworkService;
 import com.sam_chordas.android.stockhawk.data.StockLoaderService;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.invocation.InvocationOnMock;
@@ -15,12 +16,21 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class StockDetailPresenterTest {
+    private StockDetailView stockDetailView;
+    private StockLoaderService stockLoaderService;
+    private StockNetworkService stockNetworkService;
+    private StockDetailPresenter stockDetailPresenter;
+
+    @Before
+    public void setup() {
+        stockDetailView = mock(StockDetailView.class);
+        stockLoaderService = mock(StockLoaderService.class);
+        stockNetworkService = mock(StockNetworkService.class);
+        stockDetailPresenter = new StockDetailPresenter(stockDetailView, stockLoaderService, stockNetworkService);
+    }
+
     @Test
     public void shouldKnowHowToLoadStockSymbolForAParticularQuote() {
-        StockDetailView stockDetailView = mock(StockDetailView.class);
-        StockLoaderService stockLoaderService = mock(StockLoaderService.class);
-        StockNetworkService stockNetworkService = mock(StockNetworkService.class);
-        StockDetailPresenter stockDetailPresenter = new StockDetailPresenter(stockDetailView, stockLoaderService, stockNetworkService);
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -35,10 +45,6 @@ public class StockDetailPresenterTest {
 
     @Test
     public void shouldShowFailureErrorWhenUnableToLoadSymbolForAParticularQuote() {
-        StockDetailView stockDetailView = mock(StockDetailView.class);
-        StockLoaderService stockLoaderService = mock(StockLoaderService.class);
-        StockNetworkService stockNetworkService = mock(StockNetworkService.class);
-        StockDetailPresenter stockDetailPresenter = new StockDetailPresenter(stockDetailView, stockLoaderService, stockNetworkService);
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
