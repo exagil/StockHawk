@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.sam_chordas.android.stockhawk.StockDetailView;
 import com.sam_chordas.android.stockhawk.StockHawkApp;
 import com.sam_chordas.android.stockhawk.StockNetworkService;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
@@ -14,7 +15,7 @@ import com.sam_chordas.android.stockhawk.data.StockLoaderService;
 
 import javax.inject.Inject;
 
-public class StockDetailActivity extends AppCompatActivity {
+public class StockDetailActivity extends AppCompatActivity implements StockDetailView {
     @Inject
     public StockNetworkService stockNetworkService;
     @Inject
@@ -31,10 +32,15 @@ public class StockDetailActivity extends AppCompatActivity {
         quoteCursor.moveToFirst();
         String quoteSymbol = quoteCursor.getString(quoteCursor.getColumnIndex(QuoteColumns.SYMBOL));
         StockLoaderService stockLoaderService = new StockLoaderService(context);
-        StockDetailPresenter stockDetailPresenter = new StockDetailPresenter(stockLoaderService, stockNetworkService);
+        StockDetailPresenter stockDetailPresenter = new StockDetailPresenter(this, stockLoaderService, stockNetworkService);
     }
 
     private boolean doesQuoteNotExist(Cursor quote) {
         return quote.getCount() == 0;
+    }
+
+    @Override
+    public void onSymbolLoaded(String yhoo) {
+
     }
 }
