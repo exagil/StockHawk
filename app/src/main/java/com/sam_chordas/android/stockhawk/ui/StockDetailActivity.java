@@ -9,12 +9,15 @@ import com.sam_chordas.android.stockhawk.StockHawkApp;
 import com.sam_chordas.android.stockhawk.StockNetworkService;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.data.StockLoaderService;
 
 import javax.inject.Inject;
 
 public class StockDetailActivity extends AppCompatActivity {
     @Inject
     public StockNetworkService stockNetworkService;
+    @Inject
+    public StockLoaderService stockLoaderService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,6 +29,8 @@ public class StockDetailActivity extends AppCompatActivity {
             return;
         quoteCursor.moveToFirst();
         String quoteSymbol = quoteCursor.getString(quoteCursor.getColumnIndex(QuoteColumns.SYMBOL));
+
+        StockDetailPresenter stockDetailPresenter = new StockDetailPresenter(stockLoaderService, stockNetworkService);
     }
 
     private boolean doesQuoteNotExist(Cursor quote) {
