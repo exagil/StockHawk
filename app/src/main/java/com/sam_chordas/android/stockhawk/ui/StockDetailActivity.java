@@ -43,4 +43,9 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
     public void onSymbolLoaded(String yhoo) {
 
     }
+
+    @Override
+    public void onSymbolLoadFailed() {
+
+    }
 }

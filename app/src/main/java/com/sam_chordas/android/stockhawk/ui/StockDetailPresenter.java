@@ -24,7 +24,7 @@ public class StockDetailPresenter {
 
             @Override
             public void onQuoteSymbolLoadFailed() {
-
+                stockDetailView.onSymbolLoadFailed();
             }
         });
     }

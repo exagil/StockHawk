@@ -32,4 +32,22 @@ public class StockDetailPresenterTest {
         stockDetailPresenter.loadQuoteSymbolForQuoteId(1);
         verify(stockDetailView).onSymbolLoaded("YHOO");
     }
+
+    @Test
+    public void shouldShowFailureErrorWhenUnableToLoadSymbolForAParticularQuote() {
+        StockDetailView stockDetailView = mock(StockDetailView.class);
+        StockLoaderService stockLoaderService = mock(StockLoaderService.class);
+        StockNetworkService stockNetworkService = mock(StockNetworkService.class);
+        StockDetailPresenter stockDetailPresenter = new StockDetailPresenter(stockDetailView, stockLoaderService, stockNetworkService);
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                StockLoaderService.QuoteSymbolLoaderCallback callback = (StockLoaderService.QuoteSymbolLoaderCallback) invocation.getArguments()[1];
+                callback.onQuoteSymbolLoadFailed();
+                return callback;
+            }
+        }).when(stockLoaderService).loadQuoteSymbolForQuoteId(eq(1), Matchers.<StockLoaderService.QuoteSymbolLoaderCallback>any());
+        stockDetailPresenter.loadQuoteSymbolForQuoteId(1);
+        verify(stockDetailView).onSymbolLoadFailed();
+    }
 }
