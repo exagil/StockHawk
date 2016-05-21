@@ -1,10 +1,13 @@
 package com.sam_chordas.android.stockhawk;
 
+import android.content.Context;
+
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotesResponse;
 import com.sam_chordas.android.stockhawk.data.models.NetworkError;
 
-import java.text.ParseException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import retrofit2.Call;
@@ -12,28 +15,47 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class StockService {
+    public static final String DEFAULT_START_DATE = "2016-03-24";
+    public static final String DEFAULT_END_DATE = "2016-04-25";
+    private Context context;
     private StockNetworkService stockNetworkService;
 
-    public StockService(StockNetworkService stockNetworkService) {
+    public StockService(Context context, StockNetworkService stockNetworkService) {
+        this.context = context;
         this.stockNetworkService = stockNetworkService;
     }
 
     public void loadHistoricalQuotes(String stockSymbol, final HistoricalQuotesCallback callback) {
-        stockNetworkService.getHistoricalQuotes(stockSymbol).enqueue(new Callback<HistoricalQuotesResponse>() {
-            @Override
-            public void onResponse(Call<HistoricalQuotesResponse> call, Response<HistoricalQuotesResponse> response) {
-                try {
-                    callback.onHistoricalQuotesLoaded(response.body().toHistoricalQuotes());
-                } catch (ParseException e) {
-                    e.printStackTrace();
+        String urlString = null;
+        try {
+            urlString = buildUrlStringFor(stockSymbol);
+            stockNetworkService.getHistoricalQuotes(urlString).enqueue(new Callback<HistoricalQuotesResponse>() {
+                @Override
+                public void onResponse(Call<HistoricalQuotesResponse> call, Response<HistoricalQuotesResponse> response) {
+                    try {
+                        callback.onHistoricalQuotesLoaded(response.body().toHistoricalQuotes());
+                    } catch (Exception e) {
+                        onFailure(call, e);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<HistoricalQuotesResponse> call, Throwable t) {
-                callback.onHistoricalQuotesLoadFailure(new NetworkError(t));
-            }
-        });
+                @Override
+                public void onFailure(Call<HistoricalQuotesResponse> call, Throwable t) {
+                    callback.onHistoricalQuotesLoadFailure(new NetworkError(t));
+                }
+            });
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String buildUrlStringFor(String stockSymbol) throws UnsupportedEncodingException {
+        String baseUrl = context.getString(R.string.base_url);
+        String historicalDataQuery = "select * from yahoo.finance.historicaldata where symbol='"
+                + stockSymbol + "' and startDate='" + DEFAULT_START_DATE + "' and endDate='" +
+                DEFAULT_END_DATE + "'";
+        String postQuery = "&format=json&env=http://datatables.org/alltables.env";
+        return baseUrl + URLEncoder.encode(historicalDataQuery, "UTF-8") + postQuery;
     }
 
     public interface HistoricalQuotesCallback {

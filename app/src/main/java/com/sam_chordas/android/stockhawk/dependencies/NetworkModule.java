@@ -28,7 +28,7 @@ public class NetworkModule {
     @Singleton
     Retrofit providesRetrofit(Context context, OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
-                .baseUrl(context.getString(R.string.base))
+                .baseUrl(context.getString(R.string.improved_base_url))
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build();
@@ -42,7 +42,7 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    StockService providesStockService(StockNetworkService stockNetworkService) {
-        return new StockService(stockNetworkService);
+    StockService providesStockService(Context context, StockNetworkService stockNetworkService) {
+        return new StockService(context, stockNetworkService);
     }
 }

@@ -10,8 +10,8 @@
     <string name="input_hint">FB</string>
     <string name="input_prefill"></string>
     <string name="network_toast">Uh-oh! This app requires an internet connection</string>
-    <string name="base_url">http://query.yahooapis.com/v1/public/yql?q=</string>
-    <string name="base">https://query.yahooapis.com/v1/public/</string>
+    <string name="base_url" translatable="false">http://query.yahooapis.com/v1/public/yql?q=</string>
+    <string name="improved_base_url" translatable="false">http://query.yahooapis.com/v1/public/</string>
     <string name="quotes_query">select * from yahoo.finance.quotes where symbol in (</string>
     <string name="charset">UTF-8</string>
 </resources>
