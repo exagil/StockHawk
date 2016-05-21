@@ -7,6 +7,11 @@ import android.test.AndroidTestCase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
+
+import static com.sam_chordas.android.stockhawk.data.StockLoaderService.QuoteSymbolLoaderCallback;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class StockLoaderServiceTest extends AndroidTestCase {
     @Before
@@ -22,8 +27,12 @@ public class StockLoaderServiceTest extends AndroidTestCase {
     @Test
     public void shouldNotLoadQuoteNameForStockWhichDoesNotExistLocally() {
         StockLoaderService stockLoaderService = new StockLoaderService(getContext());
-        String actualSymbolName = stockLoaderService.loadQuoteSymbolForQuoteId(1);
-        assertEquals(null, actualSymbolName);
+
+        QuoteSymbolLoaderCallback quoteSymbolLoaderCallback = Mockito.mock(QuoteSymbolLoaderCallback.class);
+        stockLoaderService.loadQuoteSymbolForQuoteId(1, quoteSymbolLoaderCallback);
+
+        verify(quoteSymbolLoaderCallback).onQuoteSymbolLoadFailed();
+        verifyNoMoreInteractions(quoteSymbolLoaderCallback);
     }
 
     @Test
@@ -38,8 +47,12 @@ public class StockLoaderServiceTest extends AndroidTestCase {
         quoteContentValues.put(QuoteColumns.ISUP, 1);
         quoteContentValues.put(QuoteColumns.ISCURRENT, 1);
         getContext().getContentResolver().insert(QuoteProvider.Quotes.CONTENT_URI, quoteContentValues);
-        String actualSymbolName = stockLoaderService.loadQuoteSymbolForQuoteId(1);
-        assertEquals("YHOO", actualSymbolName);
+
+        QuoteSymbolLoaderCallback quoteSymbolLoaderCallback = Mockito.mock(QuoteSymbolLoaderCallback.class);
+        stockLoaderService.loadQuoteSymbolForQuoteId(1, quoteSymbolLoaderCallback);
+
+        verify(quoteSymbolLoaderCallback).onQuoteSymbolLoaded("YHOO");
+        verifyNoMoreInteractions(quoteSymbolLoaderCallback);
     }
 
     private void resetDatabase() {

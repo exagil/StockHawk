@@ -1,5 +1,6 @@
 package com.sam_chordas.android.stockhawk.ui;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,7 +18,7 @@ public class StockDetailActivity extends AppCompatActivity {
     @Inject
     public StockNetworkService stockNetworkService;
     @Inject
-    public StockLoaderService stockLoaderService;
+    public Context context;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,7 +30,7 @@ public class StockDetailActivity extends AppCompatActivity {
             return;
         quoteCursor.moveToFirst();
         String quoteSymbol = quoteCursor.getString(quoteCursor.getColumnIndex(QuoteColumns.SYMBOL));
-
+        StockLoaderService stockLoaderService = new StockLoaderService(context);
         StockDetailPresenter stockDetailPresenter = new StockDetailPresenter(stockLoaderService, stockNetworkService);
     }
 
