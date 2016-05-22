@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
-// StockProviderService knows how to fetch Stocks from the local storage
+// StockProviderService gives access to Stocks from the local storage
 
 public class StockProviderService implements Loader.OnLoadCompleteListener<Cursor> {
     public static final int ID_LOAD_QUOTE_SYMBOL = 1;
