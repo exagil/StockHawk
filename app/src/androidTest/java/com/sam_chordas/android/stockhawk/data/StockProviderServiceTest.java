@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.test.AndroidTestCase;
 
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
+import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotes;
 
 import org.junit.After;
 import org.junit.Before;
@@ -61,9 +62,9 @@ public class StockProviderServiceTest extends AndroidTestCase {
     }
 
     @Test
-    public void shouldKnowHowToInsertHistoricalQuotes() throws ParseException {
+    public void testThatStockProviderServiceKnowsHowToInsertHistoricalQuotes() throws ParseException {
         StockProviderService stockProviderService = new StockProviderService(getContext());
-        HistoricalQuote expectedHistoricalQuote = new HistoricalQuote(
+        HistoricalQuote firstHistoricalQuote = new HistoricalQuote(
                 "FB",
                 new Date(1463899584953l),
                 new Double(2.3),
@@ -73,11 +74,22 @@ public class StockProviderServiceTest extends AndroidTestCase {
                 new Double(2.3),
                 new Double(2.3)
         );
-        stockProviderService.insertHistoricalQuote(expectedHistoricalQuote);
+        HistoricalQuote secondHistoricalQuote = new HistoricalQuote(
+                "FB",
+                new Date(1463899584953l),
+                new Double(2.3),
+                new Double(2.3),
+                new Double(2.3),
+                new Double(2.3),
+                new Double(2.3),
+                new Double(2.3)
+        );
+        HistoricalQuotes expectedHistoricalQuotes = new HistoricalQuotes(firstHistoricalQuote, secondHistoricalQuote);
+        stockProviderService.insertHistoricalQuotes(expectedHistoricalQuotes);
         Cursor historyCursor = getContext().getContentResolver().query(HistoryProvider.History.CONTENT_URI, null,
                 HistoryColumns.SYMBOL + "=?", new String[]{"FB"}, null);
-        HistoricalQuote actualHistoricalQuote = HistoricalQuote.fromCursor(historyCursor);
-        assertEquals(expectedHistoricalQuote, actualHistoricalQuote);
+        HistoricalQuotes actualHistoricalQuotes = HistoricalQuotes.fromCursor(historyCursor);
+        assertEquals(expectedHistoricalQuotes, actualHistoricalQuotes);
     }
 
     private void resetDatabase() {

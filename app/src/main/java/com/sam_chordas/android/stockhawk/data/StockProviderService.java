@@ -8,6 +8,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
+import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotes;
 
 // StockProviderService gives access to Stocks in the local storage
 
@@ -45,9 +46,8 @@ public class StockProviderService implements Loader.OnLoadCompleteListener<Curso
         }
     }
 
-    public void insertHistoricalQuote(@NonNull HistoricalQuote historicalQuote) {
-        new AsyncQueryHandler(context.getContentResolver()) {
-        }.startInsert(0, null, HistoryProvider.History.CONTENT_URI, historicalQuote.toContentValues());
+    public void insertHistoricalQuotes(HistoricalQuotes expectedHistoricalQuotes) {
+        context.getContentResolver().bulkInsert(HistoryProvider.History.CONTENT_URI, expectedHistoricalQuotes.toContentValues());
     }
 
     public interface QuoteSymbolLoaderCallback {
