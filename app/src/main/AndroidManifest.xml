@@ -45,12 +45,12 @@
 
         <provider
             android:name="com.sam_chordas.android.stockhawk.data.generated.QuoteProvider"
-            android:authorities="com.sam_chordas.android.stockhawk.data.QuoteProvider"
+            android:authorities="com.sam_chordas.android.stockhawk.data.generated.QuoteProvider"
             android:exported="false" />
 
         <provider
             android:name="com.sam_chordas.android.stockhawk.data.generated.HistoryProvider"
-            android:authorities="com.sam_chordas.android.stockhawk.data.HistoryProvider"
+            android:authorities="com.sam_chordas.android.stockhawk.data.generated.HistoryProvider"
             android:exported="false" />
     </application>
 

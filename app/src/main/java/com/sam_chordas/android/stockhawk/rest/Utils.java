@@ -4,7 +4,7 @@ import android.content.ContentProviderOperation;
 import android.util.Log;
 
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
-import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+import com.sam_chordas.android.stockhawk.data.generated.QuoteProvider;
 
 import java.util.ArrayList;
 

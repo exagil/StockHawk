@@ -78,7 +78,6 @@ public class HistoricalQuote {
     }
 
     public static HistoricalQuote fromCursor(Cursor cursor) throws ParseException {
-        cursor.moveToFirst();
         String symbol = cursor.getString(cursor.getColumnIndex(HistoryColumns.SYMBOL));
         String date = cursor.getString(cursor.getColumnIndex(HistoryColumns.DATE));
         String open = cursor.getString(cursor.getColumnIndex(HistoryColumns.OPEN));

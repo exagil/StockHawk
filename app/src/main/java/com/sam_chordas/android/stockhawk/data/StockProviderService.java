@@ -1,13 +1,13 @@
 package com.sam_chordas.android.stockhawk.data;
 
-import android.content.AsyncQueryHandler;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
-import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
+import com.sam_chordas.android.stockhawk.data.generated.HistoryProvider;
+import com.sam_chordas.android.stockhawk.data.generated.QuoteProvider;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotes;
 
 // StockProviderService gives access to Stocks in the local storage

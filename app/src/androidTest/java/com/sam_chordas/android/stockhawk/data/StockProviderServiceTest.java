@@ -5,6 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.test.AndroidTestCase;
 
+import com.sam_chordas.android.stockhawk.data.generated.HistoryProvider;
+import com.sam_chordas.android.stockhawk.data.generated.QuoteProvider;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotes;
 
@@ -64,31 +66,32 @@ public class StockProviderServiceTest extends AndroidTestCase {
     @Test
     public void testThatStockProviderServiceKnowsHowToInsertHistoricalQuotes() throws ParseException {
         StockProviderService stockProviderService = new StockProviderService(getContext());
-        HistoricalQuote firstHistoricalQuote = new HistoricalQuote(
-                "FB",
-                new Date(1463899584953l),
-                new Double(2.3),
-                new Double(2.3),
-                new Double(2.3),
-                new Double(2.3),
-                new Double(2.3),
-                new Double(2.3)
-        );
-        HistoricalQuote secondHistoricalQuote = new HistoricalQuote(
-                "FB",
-                new Date(1463899584953l),
-                new Double(2.3),
-                new Double(2.3),
-                new Double(2.3),
-                new Double(2.3),
-                new Double(2.3),
-                new Double(2.3)
-        );
+        HistoricalQuote firstHistoricalQuote = new HistoricalQuote("FB", new Date(1463899584953l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        HistoricalQuote secondHistoricalQuote = new HistoricalQuote("FB", new Date(1464084610000l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
         HistoricalQuotes expectedHistoricalQuotes = new HistoricalQuotes(firstHistoricalQuote, secondHistoricalQuote);
         stockProviderService.insertHistoricalQuotes(expectedHistoricalQuotes);
         Cursor historyCursor = getContext().getContentResolver().query(HistoryProvider.History.CONTENT_URI, null,
                 HistoryColumns.SYMBOL + "=?", new String[]{"FB"}, null);
         HistoricalQuotes actualHistoricalQuotes = HistoricalQuotes.fromCursor(historyCursor);
+        assertEquals(expectedHistoricalQuotes, actualHistoricalQuotes);
+    }
+
+    @Test
+    public void testStockProviderServiceKnowsHowToInsertStocksWhenSameStocksInserted() throws ParseException {
+        StockProviderService stockProviderService = new StockProviderService(getContext());
+        HistoricalQuote firstHistoricalQuote = new HistoricalQuote("FB", new Date(1463899584953l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        HistoricalQuote secondHistoricalQuote = new HistoricalQuote("FB", new Date(1463998210000l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        HistoricalQuote thirdHistoricalQuote = new HistoricalQuote("FB", new Date(1464084610000l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        HistoricalQuotes formerHistoricalQuotes = new HistoricalQuotes(firstHistoricalQuote, secondHistoricalQuote);
+        HistoricalQuotes latterHistoricalQuotes = new HistoricalQuotes(secondHistoricalQuote, thirdHistoricalQuote);
+        stockProviderService.insertHistoricalQuotes(formerHistoricalQuotes);
+        stockProviderService.insertHistoricalQuotes(latterHistoricalQuotes);
+
+        HistoricalQuotes expectedHistoricalQuotes = new HistoricalQuotes(firstHistoricalQuote, secondHistoricalQuote, thirdHistoricalQuote);
+        Cursor historyCursor = getContext().getContentResolver().query(HistoryProvider.History.CONTENT_URI, null,
+                HistoryColumns.SYMBOL + "=?", new String[]{"FB"}, null);
+        HistoricalQuotes actualHistoricalQuotes = HistoricalQuotes.fromCursor(historyCursor);
+
         assertEquals(expectedHistoricalQuotes, actualHistoricalQuotes);
     }
 
