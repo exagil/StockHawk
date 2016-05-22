@@ -25,18 +25,18 @@ public class StockLoaderServiceTest extends AndroidTestCase {
     }
 
     @Test
-    public void shouldNotLoadQuoteNameForStockWhichDoesNotExistLocally() {
+    public void shouldNotLoadQuoteNameForStockWhichDoesNotExistLocally() throws InterruptedException {
         StockLoaderService stockLoaderService = new StockLoaderService(getContext());
 
         QuoteSymbolLoaderCallback quoteSymbolLoaderCallback = Mockito.mock(QuoteSymbolLoaderCallback.class);
         stockLoaderService.loadQuoteSymbolForQuoteId(1, quoteSymbolLoaderCallback);
-
+        Thread.sleep(1000);
         verify(quoteSymbolLoaderCallback).onQuoteSymbolLoadFailed();
         verifyNoMoreInteractions(quoteSymbolLoaderCallback);
     }
 
     @Test
-    public void shouldLoadQuoteSymbolWhenCorrespondingQuoteExistsLocally() {
+    public void shouldLoadQuoteSymbolWhenCorrespondingQuoteExistsLocally() throws InterruptedException {
         StockLoaderService stockLoaderService = new StockLoaderService(getContext());
         ContentValues quoteContentValues = new ContentValues();
         quoteContentValues.put(QuoteColumns.SYMBOL, "YHOO");
@@ -50,7 +50,7 @@ public class StockLoaderServiceTest extends AndroidTestCase {
 
         QuoteSymbolLoaderCallback quoteSymbolLoaderCallback = Mockito.mock(QuoteSymbolLoaderCallback.class);
         stockLoaderService.loadQuoteSymbolForQuoteId(1, quoteSymbolLoaderCallback);
-
+        Thread.sleep(1000);
         verify(quoteSymbolLoaderCallback).onQuoteSymbolLoaded("YHOO");
         verifyNoMoreInteractions(quoteSymbolLoaderCallback);
     }

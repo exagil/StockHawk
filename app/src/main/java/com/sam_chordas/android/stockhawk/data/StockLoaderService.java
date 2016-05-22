@@ -1,31 +1,43 @@
 package com.sam_chordas.android.stockhawk.data;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 
-public class StockLoaderService {
-    private final ContentResolver contentResolver;
+public class StockLoaderService implements Loader.OnLoadCompleteListener<Cursor> {
+    public static final int ID_LOAD_QUOTE_SYMBOL = 1;
     private Context context;
+    private QuoteSymbolLoaderCallback quoteSymbolLoaderCallback;
+    private CursorLoader cursorLoader;
 
     public StockLoaderService(Context context) {
-        contentResolver = context.getContentResolver();
+        this.context = context;
     }
 
-    public void loadQuoteSymbolForQuoteId(final long quoteId, final QuoteSymbolLoaderCallback callback) {
-        final Cursor symbolCursor = contentResolver.query(QuoteProvider.Quotes.CONTENT_URI,
+    public void loadQuoteSymbolForQuoteId(final long quoteId, @NonNull final QuoteSymbolLoaderCallback callback) {
+        this.quoteSymbolLoaderCallback = callback;
+        this.cursorLoader = new CursorLoader(context, QuoteProvider.Quotes.CONTENT_URI,
                 new String[]{QuoteColumns.SYMBOL},
                 "_id=?",
                 new String[]{String.valueOf(quoteId)},
                 null
         );
-        if (!symbolCursor.moveToFirst()) {
-            callback.onQuoteSymbolLoadFailed();
-            return;
+        this.cursorLoader.registerListener(ID_LOAD_QUOTE_SYMBOL, this);
+        this.cursorLoader.startLoading();
+    }
+
+    @Override
+    public void onLoadComplete(Loader<Cursor> loader, Cursor data) {
+        if (loader.getId() == ID_LOAD_QUOTE_SYMBOL) {
+            if (!data.moveToFirst()) {
+                quoteSymbolLoaderCallback.onQuoteSymbolLoadFailed();
+                return;
+            }
+            String symbol = data.getString(data.getColumnIndex(QuoteColumns.SYMBOL));
+            quoteSymbolLoaderCallback.onQuoteSymbolLoaded(symbol);
         }
-        symbolCursor.moveToFirst();
-        String symbol = symbolCursor.getString(symbolCursor.getColumnIndex(QuoteColumns.SYMBOL));
-        callback.onQuoteSymbolLoaded(symbol);
     }
 
     public interface QuoteSymbolLoaderCallback {
