@@ -13,6 +13,9 @@ public class HistoryColumns {
     @DataType(DataType.Type.TEXT)
     @NotNull
     public static final String SYMBOL = "symbol";
+    @DataType(DataType.Type.TEXT)
+    @NotNull
+    public static final String DATE = "date";
     @DataType(DataType.Type.REAL)
     @NotNull
     public static final String OPEN = "open";
