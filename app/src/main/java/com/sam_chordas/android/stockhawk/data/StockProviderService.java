@@ -1,12 +1,15 @@
 package com.sam_chordas.android.stockhawk.data;
 
+import android.content.AsyncQueryHandler;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.annotation.NonNull;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
-// StockProviderService gives access to Stocks from the local storage
+import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
+
+// StockProviderService gives access to Stocks in the local storage
 
 public class StockProviderService implements Loader.OnLoadCompleteListener<Cursor> {
     public static final int ID_LOAD_QUOTE_SYMBOL = 1;
@@ -40,6 +43,11 @@ public class StockProviderService implements Loader.OnLoadCompleteListener<Curso
             String symbol = data.getString(data.getColumnIndex(QuoteColumns.SYMBOL));
             quoteSymbolLoaderCallback.onQuoteSymbolLoaded(symbol);
         }
+    }
+
+    public void insertHistoricalQuote(@NonNull HistoricalQuote historicalQuote) {
+        new AsyncQueryHandler(context.getContentResolver()) {
+        }.startInsert(0, null, HistoryProvider.History.CONTENT_URI, historicalQuote.toContentValues());
     }
 
     public interface QuoteSymbolLoaderCallback {

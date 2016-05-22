@@ -2,12 +2,18 @@ package com.sam_chordas.android.stockhawk.data;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.test.AndroidTestCase;
+
+import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import java.text.ParseException;
+import java.util.Date;
 
 import static com.sam_chordas.android.stockhawk.data.StockProviderService.QuoteSymbolLoaderCallback;
 import static org.mockito.Mockito.verify;
@@ -27,7 +33,6 @@ public class StockProviderServiceTest extends AndroidTestCase {
     @Test
     public void shouldNotLoadQuoteNameForStockWhichDoesNotExistLocally() throws InterruptedException {
         StockProviderService stockProviderService = new StockProviderService(getContext());
-
         QuoteSymbolLoaderCallback quoteSymbolLoaderCallback = Mockito.mock(QuoteSymbolLoaderCallback.class);
         stockProviderService.loadQuoteSymbolForQuoteId(1, quoteSymbolLoaderCallback);
         Thread.sleep(1000);
@@ -53,6 +58,26 @@ public class StockProviderServiceTest extends AndroidTestCase {
         Thread.sleep(1000);
         verify(quoteSymbolLoaderCallback).onQuoteSymbolLoaded("YHOO");
         verifyNoMoreInteractions(quoteSymbolLoaderCallback);
+    }
+
+    @Test
+    public void shouldKnowHowToInsertHistoricalQuotes() throws ParseException {
+        StockProviderService stockProviderService = new StockProviderService(getContext());
+        HistoricalQuote expectedHistoricalQuote = new HistoricalQuote(
+                "FB",
+                new Date(1463899584953l),
+                new Double(2.3),
+                new Double(2.3),
+                new Double(2.3),
+                new Double(2.3),
+                new Double(2.3),
+                new Double(2.3)
+        );
+        stockProviderService.insertHistoricalQuote(expectedHistoricalQuote);
+        Cursor historyCursor = getContext().getContentResolver().query(HistoryProvider.History.CONTENT_URI, null,
+                HistoryColumns.SYMBOL + "=?", new String[]{"FB"}, null);
+        HistoricalQuote actualHistoricalQuote = HistoricalQuote.fromCursor(historyCursor);
+        assertEquals(expectedHistoricalQuote, actualHistoricalQuote);
     }
 
     private void resetDatabase() {
