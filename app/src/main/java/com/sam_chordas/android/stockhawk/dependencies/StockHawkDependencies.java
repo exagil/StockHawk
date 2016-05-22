@@ -10,6 +10,7 @@ import dagger.Component;
 @Component(modules = {
         AppModule.class,
         NetworkModule.class,
+        DataModule.class,
         LocalStorageModule.class}
 )
 public interface StockHawkDependencies {

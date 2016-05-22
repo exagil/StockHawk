@@ -39,10 +39,4 @@ public class NetworkModule {
     StockNetworkService providesStockNetworkService(Retrofit retrofit) {
         return retrofit.create(StockNetworkService.class);
     }
-
-    @Provides
-    @Singleton
-    StockService providesStockService(Context context, StockNetworkService stockNetworkService) {
-        return new StockService(context, stockNetworkService);
-    }
 }

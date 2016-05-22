@@ -2,6 +2,7 @@ package com.sam_chordas.android.stockhawk;
 
 import android.content.Context;
 
+import com.sam_chordas.android.stockhawk.data.StockProviderService;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotesResponse;
 import com.sam_chordas.android.stockhawk.data.models.NetworkError;
@@ -20,7 +21,7 @@ public class StockService {
     private Context context;
     private StockNetworkService stockNetworkService;
 
-    public StockService(Context context, StockNetworkService stockNetworkService) {
+    public StockService(Context context, StockProviderService stockProviderService, StockNetworkService stockNetworkService) {
         this.context = context;
         this.stockNetworkService = stockNetworkService;
     }
