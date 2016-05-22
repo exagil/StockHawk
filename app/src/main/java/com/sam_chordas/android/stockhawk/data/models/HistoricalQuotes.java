@@ -12,8 +12,12 @@ public class HistoricalQuotes {
     private final List<HistoricalQuote> historicalQuotes;
 
     public HistoricalQuotes(HistoricalQuote... historicalQuotes) {
+        this(Arrays.asList(historicalQuotes));
+    }
+
+    public HistoricalQuotes(List<HistoricalQuote> historicalQuotes) {
         this.historicalQuotes = new ArrayList<>();
-        this.historicalQuotes.addAll(Arrays.asList(historicalQuotes));
+        this.historicalQuotes.addAll(historicalQuotes);
     }
 
     public static HistoricalQuotes fromCursor(Cursor historyCursor) throws ParseException {
