@@ -9,11 +9,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import static com.sam_chordas.android.stockhawk.data.StockLoaderService.QuoteSymbolLoaderCallback;
+import static com.sam_chordas.android.stockhawk.data.StockProviderService.QuoteSymbolLoaderCallback;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-public class StockLoaderServiceTest extends AndroidTestCase {
+public class StockProviderServiceTest extends AndroidTestCase {
     @Before
     public void setup() {
         resetDatabase();
@@ -26,10 +26,10 @@ public class StockLoaderServiceTest extends AndroidTestCase {
 
     @Test
     public void shouldNotLoadQuoteNameForStockWhichDoesNotExistLocally() throws InterruptedException {
-        StockLoaderService stockLoaderService = new StockLoaderService(getContext());
+        StockProviderService stockProviderService = new StockProviderService(getContext());
 
         QuoteSymbolLoaderCallback quoteSymbolLoaderCallback = Mockito.mock(QuoteSymbolLoaderCallback.class);
-        stockLoaderService.loadQuoteSymbolForQuoteId(1, quoteSymbolLoaderCallback);
+        stockProviderService.loadQuoteSymbolForQuoteId(1, quoteSymbolLoaderCallback);
         Thread.sleep(1000);
         verify(quoteSymbolLoaderCallback).onQuoteSymbolLoadFailed();
         verifyNoMoreInteractions(quoteSymbolLoaderCallback);
@@ -37,7 +37,7 @@ public class StockLoaderServiceTest extends AndroidTestCase {
 
     @Test
     public void shouldLoadQuoteSymbolWhenCorrespondingQuoteExistsLocally() throws InterruptedException {
-        StockLoaderService stockLoaderService = new StockLoaderService(getContext());
+        StockProviderService stockProviderService = new StockProviderService(getContext());
         ContentValues quoteContentValues = new ContentValues();
         quoteContentValues.put(QuoteColumns.SYMBOL, "YHOO");
         quoteContentValues.put(QuoteColumns.PERCENT_CHANGE, "20");
@@ -49,7 +49,7 @@ public class StockLoaderServiceTest extends AndroidTestCase {
         getContext().getContentResolver().insert(QuoteProvider.Quotes.CONTENT_URI, quoteContentValues);
 
         QuoteSymbolLoaderCallback quoteSymbolLoaderCallback = Mockito.mock(QuoteSymbolLoaderCallback.class);
-        stockLoaderService.loadQuoteSymbolForQuoteId(1, quoteSymbolLoaderCallback);
+        stockProviderService.loadQuoteSymbolForQuoteId(1, quoteSymbolLoaderCallback);
         Thread.sleep(1000);
         verify(quoteSymbolLoaderCallback).onQuoteSymbolLoaded("YHOO");
         verifyNoMoreInteractions(quoteSymbolLoaderCallback);

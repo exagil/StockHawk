@@ -26,14 +26,14 @@ public class StockService {
     }
 
     public void loadHistoricalQuotes(String stockSymbol, final HistoricalQuotesCallback callback) {
-        String urlString = null;
         try {
-            urlString = buildUrlStringFor(stockSymbol);
+            String urlString = buildUrlStringFor(stockSymbol);
             stockNetworkService.getHistoricalQuotes(urlString).enqueue(new Callback<HistoricalQuotesResponse>() {
                 @Override
                 public void onResponse(Call<HistoricalQuotesResponse> call, Response<HistoricalQuotesResponse> response) {
                     try {
-                        callback.onHistoricalQuotesLoaded(response.body().toHistoricalQuotes());
+                        List<HistoricalQuote> historicalQuotes = response.body().toHistoricalQuotes();
+                        callback.onHistoricalQuotesLoaded(historicalQuotes);
                     } catch (Exception e) {
                         onFailure(call, e);
                     }

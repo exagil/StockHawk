@@ -2,7 +2,7 @@ package com.sam_chordas.android.stockhawk.dependencies;
 
 import android.content.Context;
 
-import com.sam_chordas.android.stockhawk.data.StockLoaderService;
+import com.sam_chordas.android.stockhawk.data.StockProviderService;
 
 import javax.inject.Singleton;
 
@@ -13,7 +13,7 @@ import dagger.Provides;
 public class LocalStorageModule {
     @Singleton
     @Provides
-    public StockLoaderService providesStockLoaderService(Context context) {
-        return new StockLoaderService(context);
+    public StockProviderService providesStockProviderService(Context context) {
+        return new StockProviderService(context);
     }
 }

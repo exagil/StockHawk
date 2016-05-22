@@ -11,7 +11,7 @@ import com.sam_chordas.android.stockhawk.StockDetailView;
 import com.sam_chordas.android.stockhawk.StockHawkApp;
 import com.sam_chordas.android.stockhawk.StockService;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
-import com.sam_chordas.android.stockhawk.data.StockLoaderService;
+import com.sam_chordas.android.stockhawk.data.StockProviderService;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
     @Inject
     public Context context;
     @Inject
-    public StockLoaderService stockLoaderService;
+    public StockProviderService stockProviderService;
     @Inject
     public StockService stockService;
 
@@ -34,7 +34,7 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_stock);
         ((StockHawkApp) getApplication()).getStockHawkDependencies().inject(this);
-        stockDetailPresenter = new StockDetailPresenter(this, stockLoaderService, stockService);
+        stockDetailPresenter = new StockDetailPresenter(this, stockProviderService, stockService);
 
         long quoteId = getIntent().getLongExtra(QuoteColumns._ID, 0);
         SparkView sparkGraphView = (SparkView) findViewById(R.id.sparkview);

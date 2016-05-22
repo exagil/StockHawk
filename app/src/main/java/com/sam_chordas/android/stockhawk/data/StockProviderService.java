@@ -6,13 +6,15 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 
-public class StockLoaderService implements Loader.OnLoadCompleteListener<Cursor> {
+// StockProviderService knows how to fetch Stocks from the local storage
+
+public class StockProviderService implements Loader.OnLoadCompleteListener<Cursor> {
     public static final int ID_LOAD_QUOTE_SYMBOL = 1;
     private Context context;
     private QuoteSymbolLoaderCallback quoteSymbolLoaderCallback;
     private CursorLoader cursorLoader;
 
-    public StockLoaderService(Context context) {
+    public StockProviderService(Context context) {
         this.context = context;
     }
 
