@@ -23,6 +23,7 @@ public class HistoricalQuotes {
     }
 
     public static HistoricalQuotes fromCursor(Cursor historyCursor) throws ParseException {
+        if (historyCursor.getCount() == 0) return new NullHistoricalQuotes();
         HistoricalQuotes historicalQuotes = new HistoricalQuotes();
         historyCursor.moveToFirst();
         for (int index = 0; index < historyCursor.getCount(); index++, historyCursor.moveToNext())

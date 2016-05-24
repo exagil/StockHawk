@@ -1,11 +1,17 @@
 package com.sam_chordas.android.stockhawk.data.models;
 
-import org.junit.Test;
+import android.database.Cursor;
 
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import java.text.ParseException;
 import java.util.Date;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 public class HistoricalQuotesTest {
     @Test
@@ -19,5 +25,12 @@ public class HistoricalQuotesTest {
     public void testThatHistoricalQuotesShouldBeEmptyWhenNoHistoricalQuotePresent() {
         HistoricalQuotes historicalQuotes = new HistoricalQuotes();
         assertTrue(historicalQuotes.isEmpty());
+    }
+
+    @Test
+    public void testThatNoHistoricalQuotesAreObtainedWhenObtaintedNoneFromDatabase() throws ParseException {
+        Cursor mockCursor = Mockito.mock(Cursor.class);
+        when(mockCursor.getCount()).thenReturn(0);
+        assertEquals(new NullHistoricalQuotes(), HistoricalQuotes.fromCursor(mockCursor));
     }
 }

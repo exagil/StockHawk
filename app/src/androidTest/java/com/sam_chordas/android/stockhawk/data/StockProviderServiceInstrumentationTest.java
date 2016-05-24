@@ -9,6 +9,7 @@ import com.sam_chordas.android.stockhawk.data.generated.HistoryProvider;
 import com.sam_chordas.android.stockhawk.data.generated.QuoteProvider;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotes;
+import com.sam_chordas.android.stockhawk.data.models.NullHistoricalQuotes;
 
 import org.junit.After;
 import org.junit.Before;
@@ -22,7 +23,7 @@ import static com.sam_chordas.android.stockhawk.data.StockProviderService.QuoteS
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-public class StockProviderServiceTest extends AndroidTestCase {
+public class StockProviderServiceInstrumentationTest extends AndroidTestCase {
     @Before
     public void setup() {
         resetDatabase();
@@ -93,6 +94,23 @@ public class StockProviderServiceTest extends AndroidTestCase {
         HistoricalQuotes actualHistoricalQuotes = HistoricalQuotes.fromCursor(historyCursor);
 
         assertEquals(expectedHistoricalQuotes, actualHistoricalQuotes);
+    }
+
+    @Test
+    public void testThatStockProviderServiceLoadsNoHistoricalQuotesWhenNonePresent() throws ParseException {
+        HistoricalQuotes expectedHistoricalQuotes = new NullHistoricalQuotes();
+        StockProviderService stockProviderService = new StockProviderService(getContext());
+        assertEquals(expectedHistoricalQuotes, stockProviderService.loadHistoricalQuotesFor("APPL"));
+    }
+
+    @Test
+    public void testThatStockProviderServiceKnowsHowToFetchHistoricalQuotesForAParticularSymbol() throws ParseException {
+        HistoricalQuote firstHistoricalQuote = new HistoricalQuote("APPL", new Date(1463899584953l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        HistoricalQuote secondHistoricalQuote = new HistoricalQuote("APPL", new Date(1464084610000l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        HistoricalQuotes expectedHistoricalQuotes = new HistoricalQuotes(firstHistoricalQuote, secondHistoricalQuote);
+        StockProviderService stockProviderService = new StockProviderService(getContext());
+        stockProviderService.insertHistoricalQuotes(expectedHistoricalQuotes);
+        assertEquals(expectedHistoricalQuotes, stockProviderService.loadHistoricalQuotesFor("APPL"));
     }
 
     private void resetDatabase() {

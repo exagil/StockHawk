@@ -10,6 +10,8 @@ import com.sam_chordas.android.stockhawk.data.generated.HistoryProvider;
 import com.sam_chordas.android.stockhawk.data.generated.QuoteProvider;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotes;
 
+import java.text.ParseException;
+
 // StockProviderService gives access to Stocks in the local storage
 
 public class StockProviderService implements Loader.OnLoadCompleteListener<Cursor> {
@@ -46,8 +48,13 @@ public class StockProviderService implements Loader.OnLoadCompleteListener<Curso
         }
     }
 
-    public void insertHistoricalQuotes(HistoricalQuotes expectedHistoricalQuotes) {
-        context.getContentResolver().bulkInsert(HistoryProvider.History.CONTENT_URI, expectedHistoricalQuotes.toContentValues());
+    public void insertHistoricalQuotes(HistoricalQuotes historicalQuotes) {
+        context.getContentResolver().bulkInsert(HistoryProvider.History.CONTENT_URI, historicalQuotes.toContentValues());
+    }
+
+    public HistoricalQuotes loadHistoricalQuotesFor(String quoteSymbol) throws ParseException {
+        Cursor historicalQuotesCursor = context.getContentResolver().query(HistoryProvider.History.CONTENT_URI, null, HistoryColumns.SYMBOL + "=?", new String[]{quoteSymbol}, null);
+        return HistoricalQuotes.fromCursor(historicalQuotesCursor);
     }
 
     public interface QuoteSymbolLoaderCallback {
