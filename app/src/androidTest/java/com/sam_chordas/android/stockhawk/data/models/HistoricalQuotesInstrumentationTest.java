@@ -13,7 +13,7 @@ import org.junit.Test;
 import java.text.ParseException;
 import java.util.Date;
 
-public class HistoricalQuotesTest extends AndroidTestCase {
+public class HistoricalQuotesInstrumentationTest extends AndroidTestCase {
     @Test
     public void testHistoricalQuotesKnowsHowToConvertItselfIntoContentValues() {
         HistoricalQuote firstHistoricalQuote = new HistoricalQuote("FB", new Date(1463899584953l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));

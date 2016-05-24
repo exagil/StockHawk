@@ -2,6 +2,7 @@ package com.sam_chordas.android.stockhawk.data.models;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -9,13 +10,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class HistoricalQuotes {
+    @NonNull
     private final List<HistoricalQuote> historicalQuotes;
 
-    public HistoricalQuotes(HistoricalQuote... historicalQuotes) {
+    public HistoricalQuotes(@NonNull HistoricalQuote... historicalQuotes) {
         this(Arrays.asList(historicalQuotes));
     }
 
-    public HistoricalQuotes(List<HistoricalQuote> historicalQuotes) {
+    public HistoricalQuotes(@NonNull List<HistoricalQuote> historicalQuotes) {
         this.historicalQuotes = new ArrayList<>();
         this.historicalQuotes.addAll(historicalQuotes);
     }
@@ -28,7 +30,7 @@ public class HistoricalQuotes {
         return historicalQuotes;
     }
 
-    private void add(HistoricalQuote historicalQuote) {
+    private void add(@NonNull HistoricalQuote historicalQuote) {
         this.historicalQuotes.add(historicalQuote);
     }
 
@@ -53,5 +55,9 @@ public class HistoricalQuotes {
     @Override
     public int hashCode() {
         return historicalQuotes != null ? historicalQuotes.hashCode() : 0;
+    }
+
+    public boolean isEmpty() {
+        return historicalQuotes.isEmpty();
     }
 }
