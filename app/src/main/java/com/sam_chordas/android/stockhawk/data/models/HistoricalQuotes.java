@@ -10,16 +10,17 @@ import java.util.Arrays;
 import java.util.List;
 
 public class HistoricalQuotes {
+    // TODO: 25/05/16 Chirag - Encapsulate field - collection
     @NonNull
-    private final List<HistoricalQuote> historicalQuotes;
+    public final List<HistoricalQuote> collection;
 
-    public HistoricalQuotes(@NonNull HistoricalQuote... historicalQuotes) {
-        this(Arrays.asList(historicalQuotes));
+    public HistoricalQuotes(@NonNull HistoricalQuote... collection) {
+        this(Arrays.asList(collection));
     }
 
-    public HistoricalQuotes(@NonNull List<HistoricalQuote> historicalQuotes) {
-        this.historicalQuotes = new ArrayList<>();
-        this.historicalQuotes.addAll(historicalQuotes);
+    public HistoricalQuotes(@NonNull List<HistoricalQuote> collection) {
+        this.collection = new ArrayList<>();
+        this.collection.addAll(collection);
     }
 
     public static HistoricalQuotes fromCursor(Cursor historyCursor) throws ParseException {
@@ -32,13 +33,13 @@ public class HistoricalQuotes {
     }
 
     private void add(@NonNull HistoricalQuote historicalQuote) {
-        this.historicalQuotes.add(historicalQuote);
+        this.collection.add(historicalQuote);
     }
 
     public ContentValues[] toContentValues() {
-        ContentValues[] historicalQuotesContentValues = new ContentValues[historicalQuotes.size()];
-        for (int index = 0; index < historicalQuotes.size(); index++)
-            historicalQuotesContentValues[index] = historicalQuotes.get(index).toContentValues();
+        ContentValues[] historicalQuotesContentValues = new ContentValues[collection.size()];
+        for (int index = 0; index < collection.size(); index++)
+            historicalQuotesContentValues[index] = collection.get(index).toContentValues();
         return historicalQuotesContentValues;
     }
 
@@ -49,16 +50,16 @@ public class HistoricalQuotes {
 
         HistoricalQuotes that = (HistoricalQuotes) o;
 
-        return historicalQuotes != null ? historicalQuotes.equals(that.historicalQuotes) : that.historicalQuotes == null;
+        return collection != null ? collection.equals(that.collection) : that.collection == null;
 
     }
 
     @Override
     public int hashCode() {
-        return historicalQuotes != null ? historicalQuotes.hashCode() : 0;
+        return collection != null ? collection.hashCode() : 0;
     }
 
     public boolean isEmpty() {
-        return historicalQuotes.isEmpty();
+        return collection.isEmpty();
     }
 }

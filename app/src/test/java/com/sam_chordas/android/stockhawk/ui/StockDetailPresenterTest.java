@@ -4,7 +4,9 @@ import com.sam_chordas.android.stockhawk.StockDetailView;
 import com.sam_chordas.android.stockhawk.StockService;
 import com.sam_chordas.android.stockhawk.data.StockProviderService;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
+import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotes;
 import com.sam_chordas.android.stockhawk.data.models.NetworkError;
+import com.sam_chordas.android.stockhawk.data.models.NullHistoricalQuotes;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +14,9 @@ import org.mockito.Matchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.mockito.Matchers.anyInt;
@@ -20,6 +24,8 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 public class StockDetailPresenterTest {
     private StockDetailView stockDetailView;
@@ -36,7 +42,7 @@ public class StockDetailPresenterTest {
     }
 
     @Test
-    public void shouldKnowHowToLoadStockSymbolForAParticularQuote() {
+    public void shouldKnowHowToLoadStockSymbolForAParticularQuote() throws ParseException {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
@@ -64,7 +70,8 @@ public class StockDetailPresenterTest {
     }
 
     @Test
-    public void shouldLoadHistoricalQuotesWhenFetchedThemSuccessfully() {
+    public void shouldLoadHistoricalQuotesWhenFetchedThemSuccessfully() throws ParseException {
+        when(stockProviderService.loadHistoricalQuotesFor("YHOO")).thenReturn(new NullHistoricalQuotes());
         final List<HistoricalQuote> historicalQuotes = new ArrayList<>();
         doAnswer(new Answer() {
             @Override
@@ -76,10 +83,12 @@ public class StockDetailPresenterTest {
         }).when(stockService).loadHistoricalQuotes(eq("YHOO"), Matchers.<StockService.HistoricalQuotesCallback>any());
         stockDetailPresenter.loadHistoricalQuotes("YHOO");
         verify(stockDetailView).onHistoricalQuotesLoaded(historicalQuotes);
+        verifyNoMoreInteractions(stockDetailView);
     }
 
     @Test
-    public void shouldShowErrorWhenNotAbleToLoadHistoricalQuotes() {
+    public void shouldShowErrorWhenNotAbleToLoadHistoricalQuotes() throws ParseException {
+        when(stockProviderService.loadHistoricalQuotesFor("YHOO")).thenReturn(new NullHistoricalQuotes());
         Throwable t = new Throwable("Some Error");
         final NetworkError networkError = new NetworkError(t);
         doAnswer(new Answer() {
@@ -92,5 +101,18 @@ public class StockDetailPresenterTest {
         }).when(stockService).loadHistoricalQuotes(eq("YHOO"), Matchers.<StockService.HistoricalQuotesCallback>any());
         stockDetailPresenter.loadHistoricalQuotes("YHOO");
         verify(stockDetailView).onHistoricalQuotesLoadFailure("Some Error");
+        verifyNoMoreInteractions(stockDetailView);
+    }
+
+    @Test
+    public void testThatStockDetailPresenterShouldLoadHistoricalQuotesFromLocalIfPresent() throws ParseException {
+        List<HistoricalQuote> historicalQuotes = new ArrayList<>();
+        HistoricalQuote historicalQuote = new HistoricalQuote("APPL", new Date(1463899584940l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        historicalQuotes.add(historicalQuote);
+        when(stockProviderService.loadHistoricalQuotesFor("APPL")).thenReturn(new HistoricalQuotes(historicalQuotes));
+        stockDetailPresenter.loadHistoricalQuotes("APPL");
+        verify(stockDetailView).onHistoricalQuotesLoaded(historicalQuotes);
+        verifyNoMoreInteractions(stockDetailView);
+        verifyNoMoreInteractions(stockService);
     }
 }

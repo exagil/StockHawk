@@ -4,8 +4,10 @@ import com.sam_chordas.android.stockhawk.StockDetailView;
 import com.sam_chordas.android.stockhawk.StockService;
 import com.sam_chordas.android.stockhawk.data.StockProviderService;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
+import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotes;
 import com.sam_chordas.android.stockhawk.data.models.NetworkError;
 
+import java.text.ParseException;
 import java.util.List;
 
 public class StockDetailPresenter {
@@ -23,7 +25,12 @@ public class StockDetailPresenter {
         stockProviderService.loadQuoteSymbolForQuoteId(quoteId, new StockProviderService.QuoteSymbolLoaderCallback() {
             @Override
             public void onQuoteSymbolLoaded(String quoteSymbol) {
-                stockDetailView.onSymbolLoaded(quoteSymbol);
+                // TODO: 25/05/16 Chirag - Not a good idea to handle exception here
+                try {
+                    stockDetailView.onSymbolLoaded(quoteSymbol);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -33,7 +40,12 @@ public class StockDetailPresenter {
         });
     }
 
-    public void loadHistoricalQuotes(String stockSymbol) {
+    public void loadHistoricalQuotes(String stockSymbol) throws ParseException {
+        HistoricalQuotes historicalQuotes = stockProviderService.loadHistoricalQuotesFor(stockSymbol);
+        if (!historicalQuotes.isEmpty()) {
+            stockDetailView.onHistoricalQuotesLoaded(historicalQuotes.collection);
+            return;
+        }
         stockService.loadHistoricalQuotes(stockSymbol, new StockService.HistoricalQuotesCallback() {
             public void onHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes) {
                 stockDetailView.onHistoricalQuotesLoaded(historicalQuotes);

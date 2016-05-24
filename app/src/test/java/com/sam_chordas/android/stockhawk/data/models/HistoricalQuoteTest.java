@@ -130,26 +130,8 @@ public class HistoricalQuoteTest {
 
     @Test
     public void shouldBeEqualToAnotherHistoricalQuoteIfHasSameAttributesAndSameDateNotSpecificAboutTime() {
-        HistoricalQuote firstHistoricalQuote = new HistoricalQuote(
-                "FB",
-                new Date(1463899584940l),
-                new Double(2.3),
-                new Double(2.3),
-                new Double(2.3),
-                new Double(2.3),
-                new Double(2.3),
-                new Double(2.3)
-        );
-        HistoricalQuote secondHistoricalQuote = new HistoricalQuote(
-                "FB",
-                new Date(1463899584953l),
-                new Double(2.3),
-                new Double(2.3),
-                new Double(2.3),
-                new Double(2.3),
-                new Double(2.3),
-                new Double(2.3)
-        );
+        HistoricalQuote firstHistoricalQuote = new HistoricalQuote("FB", new Date(1463899584940l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        HistoricalQuote secondHistoricalQuote = new HistoricalQuote("FB", new Date(1463899584953l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
         assertEquals(firstHistoricalQuote, secondHistoricalQuote);
     }
 }

@@ -14,6 +14,7 @@ import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.StockProviderService;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
 
+import java.text.ParseException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -44,8 +45,8 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
     }
 
     @Override
-    public void onSymbolLoaded(String quoteSymbol) {
-        stockDetailPresenter.loadHistoricalQuotes(quoteSymbol);
+    public void onSymbolLoaded(String stockSymbol) throws ParseException {
+        stockDetailPresenter.loadHistoricalQuotes(stockSymbol);
     }
 
     @Override
