@@ -9,7 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class HistoricalQuote {
+public class HistoricalQuote implements Comparable<HistoricalQuote> {
     public static final String FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(FORMAT_YYYY_MM_DD);
     public String symbol;
@@ -92,5 +92,12 @@ public class HistoricalQuote {
 
     private String persistableDate(Date date) {
         return DATE_FORMAT.format(date);
+    }
+
+    @Override
+    public int compareTo(HistoricalQuote that) {
+        if (this.date.before(that.date)) return -1;
+        if (this.date.after(that.date)) return 1;
+        return 0;
     }
 }

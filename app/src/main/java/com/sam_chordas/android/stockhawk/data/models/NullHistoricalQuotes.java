@@ -23,4 +23,9 @@ public class NullHistoricalQuotes extends HistoricalQuotes {
     public boolean isEmpty() {
         return true;
     }
+
+    @Override
+    public HistoricalQuotes sort() {
+        return new NullHistoricalQuotes();
+    }
 }

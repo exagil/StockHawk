@@ -7,7 +7,11 @@ import android.support.annotation.NonNull;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+
+import rx.Observable;
 
 public class HistoricalQuotes {
     // TODO: 25/05/16 Chirag - Encapsulate field - collection
@@ -16,6 +20,7 @@ public class HistoricalQuotes {
 
     public HistoricalQuotes(@NonNull HistoricalQuote... collection) {
         this(Arrays.asList(collection));
+        Observable.from(collection).toSortedList();
     }
 
     public HistoricalQuotes(@NonNull List<HistoricalQuote> collection) {
@@ -61,5 +66,11 @@ public class HistoricalQuotes {
 
     public boolean isEmpty() {
         return collection.isEmpty();
+    }
+
+    public HistoricalQuotes sort() {
+        ArrayList<HistoricalQuote> historicalQuotes = new ArrayList<>(collection);
+        Collections.sort(historicalQuotes);
+        return new HistoricalQuotes(historicalQuotes);
     }
 }

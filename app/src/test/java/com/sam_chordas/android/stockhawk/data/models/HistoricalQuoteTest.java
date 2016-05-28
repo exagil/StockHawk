@@ -134,4 +134,25 @@ public class HistoricalQuoteTest {
         HistoricalQuote secondHistoricalQuote = new HistoricalQuote("FB", new Date(1463899584953l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
         assertEquals(firstHistoricalQuote, secondHistoricalQuote);
     }
+
+    @Test
+    public void shouldBeLessThanAnotherHistoricalQuoteWhenDateBeforeOthersDate() {
+        HistoricalQuote thisHistoricalQuote = new HistoricalQuote("FB", new Date(1463899584940l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        HistoricalQuote thatHistoricalQuote = new HistoricalQuote("FB", new Date(1463899584953l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        assertEquals(-1, thisHistoricalQuote.compareTo(thatHistoricalQuote));
+    }
+
+    @Test
+    public void shouldBeGreaterThanAnotherHistoricalQuoteWhenDateAfterOthersDate() {
+        HistoricalQuote thisHistoricalQuote = new HistoricalQuote("FB", new Date(1463899584953l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        HistoricalQuote thatHistoricalQuote = new HistoricalQuote("FB", new Date(1463899584940l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        assertEquals(1, thisHistoricalQuote.compareTo(thatHistoricalQuote));
+    }
+
+    @Test
+    public void shouldBeEqualToAnotherHistoricalQuoteWhenDateEqualToOthersDate() {
+        HistoricalQuote thisHistoricalQuote = new HistoricalQuote("FB", new Date(1463899584953l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        HistoricalQuote thatHistoricalQuote = new HistoricalQuote("FB", new Date(1463899584953l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        assertEquals(0, thisHistoricalQuote.compareTo(thatHistoricalQuote));
+    }
 }

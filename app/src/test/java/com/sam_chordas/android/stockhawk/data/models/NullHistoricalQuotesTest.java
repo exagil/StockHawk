@@ -9,4 +9,9 @@ public class NullHistoricalQuotesTest {
     public void testThatNullHistoricalQuotesShouldBeEmpty() {
         Assert.assertTrue(new NullHistoricalQuotes().isEmpty());
     }
+
+    @Test
+    public void testThatNullHistoricalQuotesShouldNotKnowHowToBeSorted() {
+        Assert.assertEquals(new NullHistoricalQuotes(), new NullHistoricalQuotes().sort());
+    }
 }
