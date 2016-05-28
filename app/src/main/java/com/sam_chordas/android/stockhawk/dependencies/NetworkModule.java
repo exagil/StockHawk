@@ -5,7 +5,7 @@ import android.content.Context;
 
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.StockNetworkService;
-import com.sam_chordas.android.stockhawk.StockService;
+import com.sam_chordas.android.stockhawk.rest.HttpNetworkInterceptor;
 import com.sam_chordas.android.stockhawk.utils.NetworkUtils;
 
 import javax.inject.Singleton;
@@ -21,8 +21,10 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    OkHttpClient providesOkHttpClient() {
-        return new OkHttpClient();
+    OkHttpClient providesOkHttpClient(NetworkUtils networkUtils) {
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+        okHttpClientBuilder.addInterceptor(new HttpNetworkInterceptor(networkUtils));
+        return okHttpClientBuilder.build();
     }
 
     @Provides
@@ -39,5 +41,11 @@ public class NetworkModule {
     @Singleton
     StockNetworkService providesStockNetworkService(Retrofit retrofit) {
         return retrofit.create(StockNetworkService.class);
+    }
+
+    @Provides
+    @Singleton
+    NetworkUtils providesNetworkUtils(Context context) {
+        return new NetworkUtils(context);
     }
 }

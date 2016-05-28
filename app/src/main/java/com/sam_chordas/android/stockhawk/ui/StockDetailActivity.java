@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.TextView;
 
 import com.robinhood.spark.SparkView;
 import com.sam_chordas.android.stockhawk.R;
@@ -29,6 +30,8 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
 
     private StockDetailPresenter stockDetailPresenter;
     private StockGraphAdapter stockGraphAdapter;
+    private TextView textError;
+    private SparkView sparkGraphView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,7 +41,8 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
         stockDetailPresenter = new StockDetailPresenter(this, stockProviderService, stockService);
 
         long quoteId = getIntent().getLongExtra(QuoteColumns._ID, 0);
-        SparkView sparkGraphView = (SparkView) findViewById(R.id.sparkview);
+        sparkGraphView = (SparkView) findViewById(R.id.sparkview);
+        textError = (TextView) findViewById(R.id.text_error);
         stockGraphAdapter = new StockGraphAdapter(null);
         sparkGraphView.setAdapter(stockGraphAdapter);
         stockDetailPresenter.loadQuoteSymbolForQuoteId(quoteId);
@@ -55,10 +59,15 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
 
     @Override
     public void onHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes) {
+        sparkGraphView.setVisibility(SparkView.VISIBLE);
+        textError.setVisibility(TextView.GONE);
         stockGraphAdapter.populate(historicalQuotes);
     }
 
     @Override
-    public void onHistoricalQuotesLoadFailure(String s) {
+    public void onHistoricalQuotesLoadFailure(String error) {
+        sparkGraphView.setVisibility(SparkView.GONE);
+        textError.setVisibility(TextView.VISIBLE);
+        textError.setText(error);
     }
 }

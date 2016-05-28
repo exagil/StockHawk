@@ -12,11 +12,11 @@ public class StockHawkApp extends Application {
 
     @Override
     public void onCreate() {
-        super.onCreate();
         dependencies = DaggerStockHawkDependencies.builder()
                 .appModule(new AppModule(this))
                 .networkModule(new NetworkModule())
                 .build();
+        super.onCreate();
     }
 
     public StockHawkDependencies getStockHawkDependencies() {

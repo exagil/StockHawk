@@ -12,5 +12,5 @@ public interface StockDetailView {
 
     void onHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes);
 
-    void onHistoricalQuotesLoadFailure(String s);
+    void onHistoricalQuotesLoadFailure(String error);
 }
