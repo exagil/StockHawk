@@ -18,7 +18,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,7 +35,7 @@ import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.generated.QuoteProvider;
 import com.sam_chordas.android.stockhawk.rest.QuoteCursorAdapter;
 import com.sam_chordas.android.stockhawk.rest.RecyclerViewItemClickListener;
-import com.sam_chordas.android.stockhawk.rest.Utils;
+import com.sam_chordas.android.stockhawk.utils.Utils;
 import com.sam_chordas.android.stockhawk.service.StockIntentService;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
 import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallback;
@@ -247,13 +246,16 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         int stockStatus = sharedPreferences.getInt(key, StockTaskService.STOCK_STATUS_UNKNOWN);
         switch (stockStatus) {
             case StockTaskService.STOCK_STATUS_SERVER_DOWN:
-                Snackbar.make(rootLayout, "Server Down", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(rootLayout, R.string.stock_status_server_down, Snackbar.LENGTH_SHORT).show();
                 break;
             case StockTaskService.STOCK_STATUS_SERVER_INVALID:
-                Snackbar.make(rootLayout, "Server is returning malformed data", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(rootLayout, R.string.stock_status_server_invalid, Snackbar.LENGTH_SHORT).show();
                 break;
             case StockTaskService.STOCK_STATUS_INVALID:
-                Snackbar.make(rootLayout, "Stock doesn't exist", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(rootLayout, R.string.stock_inexistent, Snackbar.LENGTH_SHORT).show();
+                break;
+            case StockTaskService.STOCK_STATUS_NETWORK_ERROR:
+                Snackbar.make(rootLayout, R.string.no_internet_connection, Snackbar.LENGTH_SHORT).show();
                 break;
             default:
                 break;

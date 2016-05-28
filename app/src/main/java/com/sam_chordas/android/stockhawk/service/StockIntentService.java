@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.TaskParams;
 import com.sam_chordas.android.stockhawk.R;
+import com.sam_chordas.android.stockhawk.utils.NetworkUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

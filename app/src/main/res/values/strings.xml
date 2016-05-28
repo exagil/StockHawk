@@ -15,4 +15,8 @@
     <string name="quotes_query">select * from yahoo.finance.quotes where symbol in (</string>
     <string name="charset">UTF-8</string>
     <string name="stock_status_key" translatable="false">stock_status</string>
+    <string name="no_internet_connection" translatable="true">Not connected to internet</string>
+    <string name="stock_inexistent">Stock doesn\'t exist</string>
+    <string name="stock_status_server_invalid">Server is returning malformed data</string>
+    <string name="stock_status_server_down">Server Down</string>
 </resources>

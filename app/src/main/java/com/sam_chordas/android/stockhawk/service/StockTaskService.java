@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.os.RemoteException;
 import android.support.annotation.IntDef;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
@@ -16,7 +15,8 @@ import com.google.android.gms.gcm.TaskParams;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.generated.QuoteProvider;
-import com.sam_chordas.android.stockhawk.rest.Utils;
+import com.sam_chordas.android.stockhawk.utils.NetworkUtils;
+import com.sam_chordas.android.stockhawk.utils.Utils;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -33,15 +33,13 @@ import java.net.URLEncoder;
  * and is used for the initialization and adding task as well.
  */
 public class StockTaskService extends GcmTaskService {
+    private final NetworkUtils networkUtils;
     private String LOG_TAG = StockTaskService.class.getSimpleName();
 
     private OkHttpClient client = new OkHttpClient();
     private Context context;
     private StringBuilder mStoredSymbols = new StringBuilder();
     private boolean isUpdate;
-
-    public StockTaskService() {
-    }
 
     @Override
     public void onCreate() {
@@ -50,11 +48,12 @@ public class StockTaskService extends GcmTaskService {
 
     public StockTaskService(Context context) {
         this.context = context;
-        setStockStatus(STOCK_STATUS_UNKNOWN, context);
+        networkUtils = new NetworkUtils(context);
     }
 
     @Override
     public int onRunTask(TaskParams params) {
+        setStockStatus(STOCK_STATUS_UNKNOWN, context);
         Cursor initQueryCursor;
         if (context == null) {
             context = this;
@@ -117,8 +116,11 @@ public class StockTaskService extends GcmTaskService {
         if (urlStringBuilder != null) {
             urlString = urlStringBuilder.toString();
             try {
+                if (networkUtils.isNotConnectedToInternet()) {
+                    setStockStatus(STOCK_STATUS_NETWORK_ERROR, context);
+                    return result;
+                }
                 getResponse = fetchData(urlString);
-                result = GcmNetworkManager.RESULT_SUCCESS;
                 ContentValues contentValues = new ContentValues();
                 // update ISCURRENT to 0 (false) so new data is current
                 if (isUpdate) {
@@ -128,7 +130,7 @@ public class StockTaskService extends GcmTaskService {
                 }
                 context.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,
                         Utils.quoteJsonToContentVals(getResponse));
-
+                result = GcmNetworkManager.RESULT_SUCCESS;
             } catch (IOException e) {
                 e.printStackTrace();
                 setStockStatus(STOCK_STATUS_SERVER_DOWN, context);
@@ -143,7 +145,7 @@ public class StockTaskService extends GcmTaskService {
     }
 
     @IntDef({STOCK_STATUS_UNKNOWN, STOCK_STATUS_OK, STOCK_STATUS_INVALID, STOCK_STATUS_SERVER_DOWN,
-            STOCK_STATUS_SERVER_INVALID})
+            STOCK_STATUS_SERVER_INVALID, STOCK_STATUS_NETWORK_ERROR})
     @Retention(RetentionPolicy.SOURCE)
     public @interface StockStatus {
     }
@@ -153,6 +155,7 @@ public class StockTaskService extends GcmTaskService {
     public static final int STOCK_STATUS_INVALID = 2;
     public static final int STOCK_STATUS_SERVER_DOWN = 3;
     public static final int STOCK_STATUS_SERVER_INVALID = 4;
+    public static final int STOCK_STATUS_NETWORK_ERROR = 5;
 
     private String fetchData(String url) throws IOException {
         Request request = new Request.Builder()

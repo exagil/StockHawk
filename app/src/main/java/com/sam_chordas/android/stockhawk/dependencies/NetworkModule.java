@@ -6,6 +6,7 @@ import android.content.Context;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.StockNetworkService;
 import com.sam_chordas.android.stockhawk.StockService;
+import com.sam_chordas.android.stockhawk.utils.NetworkUtils;
 
 import javax.inject.Singleton;
 

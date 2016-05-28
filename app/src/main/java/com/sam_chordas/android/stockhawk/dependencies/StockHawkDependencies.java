@@ -1,5 +1,6 @@
 package com.sam_chordas.android.stockhawk.dependencies;
 
+import com.sam_chordas.android.stockhawk.service.StockIntentService;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
 import com.sam_chordas.android.stockhawk.ui.MyStocksActivity;
 import com.sam_chordas.android.stockhawk.ui.StockDetailActivity;
@@ -19,4 +20,6 @@ public interface StockHawkDependencies {
     void inject(StockDetailActivity stockDetailActivity);
 
     void inject(MyStocksActivity myStocksActivity);
+
+    void inject(StockIntentService stockIntentService);
 }

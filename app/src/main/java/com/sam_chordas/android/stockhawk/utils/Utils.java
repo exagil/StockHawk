@@ -1,4 +1,4 @@
-package com.sam_chordas.android.stockhawk.rest;
+package com.sam_chordas.android.stockhawk.utils;
 
 import android.content.ContentProviderOperation;
 import android.support.annotation.Nullable;
