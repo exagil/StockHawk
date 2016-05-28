@@ -1,15 +1,11 @@
 package com.sam_chordas.android.stockhawk.widget;
 
-import android.content.AsyncQueryHandler;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
-import android.os.Build;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import com.sam_chordas.android.stockhawk.BuildConfig;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.generated.QuoteProvider;
@@ -61,6 +57,7 @@ public class StocksWidgetFactory implements RemoteViewsService.RemoteViewsFactor
         String bidPrice = stocksCursor.getString(stocksCursor.getColumnIndex(QuoteColumns.BIDPRICE));
         String percentChange = stocksCursor.getString(stocksCursor.getColumnIndex(QuoteColumns.PERCENT_CHANGE));
         String change = stocksCursor.getString(stocksCursor.getColumnIndex(QuoteColumns.CHANGE));
+        long quoteId = stocksCursor.getLong(stocksCursor.getColumnIndex(QuoteColumns._ID));
 
         RemoteViews remoteViewStocksListItem = new RemoteViews(context.getPackageName(), R.layout.widget_stocks_list_item);
         remoteViewStocksListItem.setTextViewText(R.id.stock_symbol, stockSymbol);
@@ -70,6 +67,9 @@ public class StocksWidgetFactory implements RemoteViewsService.RemoteViewsFactor
         } else {
             remoteViewStocksListItem.setTextViewText(R.id.change, change);
         }
+        Intent fillInIntent = new Intent();
+        fillInIntent.putExtra(QuoteColumns._ID, quoteId);
+        remoteViewStocksListItem.setOnClickFillInIntent(R.id.widget_stocks_list_item, fillInIntent);
         return remoteViewStocksListItem;
     }
 

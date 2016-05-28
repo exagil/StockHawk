@@ -22,4 +22,11 @@
         android:layout_height="match_parent"
         android:layout_below="@id/text_header" />
 
+    <TextView
+        android:id="@+id/list_stocks_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/no_stocks_present" />
+
 </RelativeLayout>

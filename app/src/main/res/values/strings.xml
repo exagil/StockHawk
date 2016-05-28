@@ -20,4 +20,5 @@
     <string name="stock_status_server_invalid">Server is returning malformed data</string>
     <string name="stock_status_server_down">Server Down</string>
     <string name="todays_stocks">Today\'s Bid Prices</string>
+    <string name="no_stocks_present">No Stocks Present</string>
 </resources>

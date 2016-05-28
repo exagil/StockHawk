@@ -1,5 +1,6 @@
 package com.sam_chordas.android.stockhawk.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -8,14 +9,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.util.Log;
+import android.support.v4.app.TaskStackBuilder;
 import android.widget.RemoteViews;
 
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.generated.QuoteProvider;
+import com.sam_chordas.android.stockhawk.ui.StockDetailActivity;
 
 public class StocksWidgetProvider extends AppWidgetProvider {
     private final HandlerThread handlerThread;
@@ -57,23 +58,17 @@ public class StocksWidgetProvider extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         super.onUpdate(context, appWidgetManager, appWidgetIds);
-        Log.d("chi6rag", "onUpdate -> called");
         for (int appWidgetId : appWidgetIds) {
             Intent stockWidgetServiceIntent = new Intent(context, StocksWidgetService.class);
             RemoteViews widgetRemoteViews = new RemoteViews(context.getPackageName(), R.layout.widget_stocks);
             widgetRemoteViews.setRemoteAdapter(R.id.list_stocks, stockWidgetServiceIntent);
+            widgetRemoteViews.setEmptyView(R.id.list_stocks, R.id.list_stocks_empty);
+            Intent stockDetailIntent = new Intent(context, StockDetailActivity.class);
+            PendingIntent stockDetailPendingIntent = TaskStackBuilder.create(context)
+                    .addNextIntentWithParentStack(stockDetailIntent)
+                    .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            widgetRemoteViews.setPendingIntentTemplate(R.id.list_stocks, stockDetailPendingIntent);
             appWidgetManager.updateAppWidget(appWidgetId, widgetRemoteViews);
         }
-    }
-
-    @Override
-    public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int appWidgetId, Bundle newOptions) {
-        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions);
-        Log.d("chi6rag", "onAppWidgetOptionsChanged -> called");
-    }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
     }
 }
