@@ -8,6 +8,8 @@ import com.sam_chordas.android.stockhawk.StockNetworkService;
 import com.sam_chordas.android.stockhawk.rest.HttpNetworkInterceptor;
 import com.sam_chordas.android.stockhawk.utils.NetworkUtils;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -24,6 +26,9 @@ public class NetworkModule {
     OkHttpClient providesOkHttpClient(NetworkUtils networkUtils) {
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
         okHttpClientBuilder.addInterceptor(new HttpNetworkInterceptor(networkUtils));
+        okHttpClientBuilder.connectTimeout(30, TimeUnit.SECONDS);
+        okHttpClientBuilder.readTimeout(30, TimeUnit.SECONDS);
+        okHttpClientBuilder.writeTimeout(30, TimeUnit.SECONDS);
         return okHttpClientBuilder.build();
     }
 
