@@ -14,4 +14,5 @@
     <string name="improved_base_url" translatable="false">http://query.yahooapis.com/v1/public/</string>
     <string name="quotes_query">select * from yahoo.finance.quotes where symbol in (</string>
     <string name="charset">UTF-8</string>
+    <string name="stock_status_key" translatable="false">stock_status</string>
 </resources>

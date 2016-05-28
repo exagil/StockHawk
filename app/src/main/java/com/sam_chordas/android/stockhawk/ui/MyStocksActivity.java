@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -15,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +29,7 @@ import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 import com.melnykov.fab.FloatingActionButton;
 import com.sam_chordas.android.stockhawk.R;
+import com.sam_chordas.android.stockhawk.StockHawkApp;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.generated.QuoteProvider;
 import com.sam_chordas.android.stockhawk.rest.QuoteCursorAdapter;
@@ -36,7 +39,10 @@ import com.sam_chordas.android.stockhawk.service.StockIntentService;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
 import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallback;
 
-public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+import javax.inject.Inject;
+
+public class MyStocksActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>,
+        SharedPreferences.OnSharedPreferenceChangeListener {
     public static final String PERIODIC = "periodic";
 
     /**
@@ -55,13 +61,24 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     private Cursor mCursor;
     boolean isConnected;
 
+    @Inject
+    public SharedPreferences stockHawkPreferences;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        stockHawkPreferences.registerOnSharedPreferenceChangeListener(this);
+        getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
         ConnectivityManager cm =
                 (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-
+        ((StockHawkApp) getApplication()).getStockHawkDependencies().inject(this);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
@@ -160,13 +177,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         }
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getLoaderManager().restartLoader(CURSOR_LOADER_ID, null, this);
-    }
-
     public void networkToast() {
         Toast.makeText(mContext, getString(R.string.network_toast), Toast.LENGTH_SHORT).show();
     }
@@ -228,4 +238,21 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         mCursorAdapter.swapCursor(null);
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        int stockStatus = sharedPreferences.getInt(key, StockTaskService.STOCK_STATUS_UNKNOWN);
+        switch (stockStatus) {
+            case StockTaskService.STOCK_STATUS_SERVER_DOWN:
+                Log.d("chi6rag", "Server Down");
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        stockHawkPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        super.onStop();
+    }
 }

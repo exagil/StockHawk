@@ -1,11 +1,21 @@
 package com.sam_chordas.android.stockhawk.service;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.IntDef;
 import android.util.Log;
 
 import com.google.android.gms.gcm.TaskParams;
+import com.sam_chordas.android.stockhawk.R;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+import javax.inject.Inject;
 
 /**
  * Created by sam_chordas on 10/1/15.
@@ -33,3 +43,4 @@ public class StockIntentService extends IntentService {
         stockTaskService.onRunTask(new TaskParams(intent.getStringExtra("tag"), args));
     }
 }
+
