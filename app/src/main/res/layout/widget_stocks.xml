@@ -1,8 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_blue_700"
+    android:background="@color/material_grey"
     android:orientation="vertical">
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/text_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/md_material_blue_600"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="@string/todays_stocks"
+        android:textColor="@color/white" />
+
+    <ListView
+        android:id="@+id/list_stocks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/text_header" />
+
+</RelativeLayout>

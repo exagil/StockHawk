@@ -47,7 +47,7 @@
         <provider
             android:name="com.sam_chordas.android.stockhawk.data.generated.QuoteProvider"
             android:authorities="com.sam_chordas.android.stockhawk.data.generated.QuoteProvider"
-            android:exported="false" />
+            android:exported="true" />
 
         <provider
             android:name="com.sam_chordas.android.stockhawk.data.generated.HistoryProvider"
@@ -62,6 +62,12 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/stocks_widget_provider_info" />
         </receiver>
+
+        <service
+            android:name=".widget.StocksWidgetService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>
