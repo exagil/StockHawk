@@ -10,6 +10,8 @@ import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -63,6 +65,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
     @Inject
     public SharedPreferences stockHawkPreferences;
+    private CoordinatorLayout rootLayout;
 
     @Override
     public void onResume() {
@@ -83,6 +86,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
         setContentView(R.layout.activity_my_stocks);
+        rootLayout = (CoordinatorLayout) findViewById(R.id.root_activity_my_stocks);
         // The intent service is for executing immediate pulls from the Yahoo API
         // GCMTaskService can only schedule tasks, they cannot execute immediately
         mServiceIntent = new Intent(this, StockIntentService.class);
@@ -243,7 +247,13 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         int stockStatus = sharedPreferences.getInt(key, StockTaskService.STOCK_STATUS_UNKNOWN);
         switch (stockStatus) {
             case StockTaskService.STOCK_STATUS_SERVER_DOWN:
-                Log.d("chi6rag", "Server Down");
+                Snackbar.make(rootLayout, "Server Down", Snackbar.LENGTH_SHORT).show();
+                break;
+            case StockTaskService.STOCK_STATUS_SERVER_INVALID:
+                Snackbar.make(rootLayout, "Server is returning malformed data", Snackbar.LENGTH_SHORT).show();
+                break;
+            case StockTaskService.STOCK_STATUS_INVALID:
+                Snackbar.make(rootLayout, "Stock doesn't exist", Snackbar.LENGTH_SHORT).show();
                 break;
             default:
                 break;

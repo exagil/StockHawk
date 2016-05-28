@@ -50,6 +50,7 @@ public class StockTaskService extends GcmTaskService {
 
     public StockTaskService(Context context) {
         this.context = context;
+        setStockStatus(STOCK_STATUS_UNKNOWN, context);
     }
 
     @Override
@@ -118,22 +119,23 @@ public class StockTaskService extends GcmTaskService {
             try {
                 getResponse = fetchData(urlString);
                 result = GcmNetworkManager.RESULT_SUCCESS;
-                try {
-                    ContentValues contentValues = new ContentValues();
-                    // update ISCURRENT to 0 (false) so new data is current
-                    if (isUpdate) {
-                        contentValues.put(QuoteColumns.ISCURRENT, 0);
-                        context.getContentResolver().update(QuoteProvider.Quotes.CONTENT_URI, contentValues,
-                                null, null);
-                    }
-                    context.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,
-                            Utils.quoteJsonToContentVals(getResponse));
-                } catch (RemoteException | OperationApplicationException e) {
-                    Log.e(LOG_TAG, "Error applying batch insert", e);
+                ContentValues contentValues = new ContentValues();
+                // update ISCURRENT to 0 (false) so new data is current
+                if (isUpdate) {
+                    contentValues.put(QuoteColumns.ISCURRENT, 0);
+                    context.getContentResolver().update(QuoteProvider.Quotes.CONTENT_URI, contentValues,
+                            null, null);
                 }
+                context.getContentResolver().applyBatch(QuoteProvider.AUTHORITY,
+                        Utils.quoteJsonToContentVals(getResponse));
+
             } catch (IOException e) {
                 e.printStackTrace();
                 setStockStatus(STOCK_STATUS_SERVER_DOWN, context);
+            } catch (RemoteException | OperationApplicationException e) {
+                setStockStatus(STOCK_STATUS_SERVER_INVALID, context);
+            } catch (NumberFormatException e) {
+                setStockStatus(STOCK_STATUS_INVALID, context);
             }
         }
 
