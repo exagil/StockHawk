@@ -28,4 +28,9 @@ public class NullHistoricalQuotes extends HistoricalQuotes {
     public List<HistoricalQuote> sortedCollection() {
         return null;
     }
+
+    @Override
+    public boolean areFresh(HistoricalQuoteDate historicalQuoteDate) {
+        return false;
+    }
 }

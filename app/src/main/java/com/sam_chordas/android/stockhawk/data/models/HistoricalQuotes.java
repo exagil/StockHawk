@@ -8,7 +8,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import rx.Observable;
@@ -36,10 +35,6 @@ public class HistoricalQuotes {
             historicalQuotes.add(HistoricalQuote.fromCursor(historyCursor));
         historyCursor.close();
         return historicalQuotes;
-    }
-
-    private void add(@NonNull HistoricalQuote historicalQuote) {
-        this.collection.add(historicalQuote);
     }
 
     public ContentValues[] toContentValues() {
@@ -73,5 +68,18 @@ public class HistoricalQuotes {
         ArrayList<HistoricalQuote> historicalQuotes = new ArrayList<>(collection);
         Collections.sort(historicalQuotes);
         return historicalQuotes;
+    }
+
+    private void add(@NonNull HistoricalQuote historicalQuote) {
+        this.collection.add(historicalQuote);
+    }
+
+    public boolean areFresh(HistoricalQuoteDate historicalQuoteDate) {
+        HistoricalQuote lastHistoricalQuote = sortedCollection().get(lastHistoricalQuoteIndex());
+        return lastHistoricalQuote.isFresh(historicalQuoteDate);
+    }
+
+    private int lastHistoricalQuoteIndex() {
+        return collection.size() - 1;
     }
 }

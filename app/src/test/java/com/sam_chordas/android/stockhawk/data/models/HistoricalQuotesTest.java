@@ -2,9 +2,12 @@ package com.sam_chordas.android.stockhawk.data.models;
 
 import android.database.Cursor;
 
+import com.google.gson.Gson;
+
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,5 +65,25 @@ public class HistoricalQuotesTest {
     public void testThatHistoricalQuotesAreNotSortedIfTheyAreEmpty() {
         HistoricalQuotes historicalQuotes = new HistoricalQuotes();
         assertEquals(new ArrayList<HistoricalQuote>(), historicalQuotes.sortedCollection());
+    }
+
+    @Test
+    public void testThatHistoricalQuotesKnowIfTheyAreFresh() throws ParseException {
+        HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(1464516610000l);
+        InputStreamReader historicalQuotesReader = new InputStreamReader(HistoricalQuoteResponse.class.getClassLoader().getResourceAsStream("historical_quotes_fb_20160429_20160527.json"));
+        HistoricalQuotesResponse historicalQuotesResponse = new Gson().fromJson(historicalQuotesReader, HistoricalQuotesResponse.class);
+        final List<HistoricalQuote> historicalQuoteList = historicalQuotesResponse.toHistoricalQuotes();
+        HistoricalQuotes historicalQuotes = new HistoricalQuotes(historicalQuoteList);
+        assertTrue(historicalQuotes.areFresh(historicalQuoteDate));
+    }
+
+    @Test
+    public void testThatHistoricalQuotesKnowIfTheyAreNotFresh() throws ParseException {
+        HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(1464516610000l);
+        InputStreamReader historicalQuotesReader = new InputStreamReader(HistoricalQuoteResponse.class.getClassLoader().getResourceAsStream("historical_quotes_fb_20160429_20160526.json"));
+        HistoricalQuotesResponse historicalQuotesResponse = new Gson().fromJson(historicalQuotesReader, HistoricalQuotesResponse.class);
+        final List<HistoricalQuote> historicalQuoteList = historicalQuotesResponse.toHistoricalQuotes();
+        HistoricalQuotes historicalQuotes = new HistoricalQuotes(historicalQuoteList);
+        assertFalse(historicalQuotes.areFresh(historicalQuoteDate));
     }
 }
