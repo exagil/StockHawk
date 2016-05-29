@@ -3,11 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/material_grey"
+    android:contentDescription="@string/stock_hawk"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/text_header"
         android:layout_width="match_parent"
+        android:contentDescription="@string/todays_bid_prices"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="@color/md_material_blue_600"
@@ -18,12 +20,14 @@
 
     <ListView
         android:id="@+id/list_stocks"
+        android:contentDescription="@string/stocks"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/text_header" />
 
     <TextView
         android:id="@+id/list_stocks_empty"
+        android:contentDescription="@string/no_stocks_present"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"

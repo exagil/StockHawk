@@ -39,7 +39,7 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
         setContentView(R.layout.activity_detail_stock);
         ((StockHawkApp) getApplication()).getStockHawkDependencies().inject(this);
         stockDetailPresenter = new StockDetailPresenter(this, stockProviderService, stockService);
-
+        setTitle(R.string.stock_detail);
         long quoteId = getIntent().getLongExtra(QuoteColumns._ID, 0);
         sparkGraphView = (SparkView) findViewById(R.id.sparkview);
         textError = (TextView) findViewById(R.id.text_error);

@@ -59,13 +59,22 @@ public class StocksWidgetFactory implements RemoteViewsService.RemoteViewsFactor
         String change = stocksCursor.getString(stocksCursor.getColumnIndex(QuoteColumns.CHANGE));
         long quoteId = stocksCursor.getLong(stocksCursor.getColumnIndex(QuoteColumns._ID));
 
+        String stockSymbolContentDescription = String.format(context.getString(R.string.stock_symbol), stockSymbol);
+        String bidPriceContentDescription = String.format(context.getString(R.string.bid_price), bidPrice);
+
         RemoteViews remoteViewStocksListItem = new RemoteViews(context.getPackageName(), R.layout.widget_stocks_list_item);
         remoteViewStocksListItem.setTextViewText(R.id.stock_symbol, stockSymbol);
+        remoteViewStocksListItem.setContentDescription(R.id.stock_symbol, stockSymbolContentDescription);
         remoteViewStocksListItem.setTextViewText(R.id.bid_price, bidPrice);
+        remoteViewStocksListItem.setContentDescription(R.id.bid_price, bidPriceContentDescription);
         if (Utils.showPercent) {
             remoteViewStocksListItem.setTextViewText(R.id.change, percentChange);
+            String percetChangeContentDescription = String.format(context.getString(R.string.percent_change), percentChange);
+            remoteViewStocksListItem.setContentDescription(R.id.change, percetChangeContentDescription);
         } else {
             remoteViewStocksListItem.setTextViewText(R.id.change, change);
+            String changeContentDescription = String.format(context.getString(R.string.change), change);
+            remoteViewStocksListItem.setContentDescription(R.id.change, changeContentDescription);
         }
         Intent fillInIntent = new Intent();
         fillInIntent.putExtra(QuoteColumns._ID, quoteId);

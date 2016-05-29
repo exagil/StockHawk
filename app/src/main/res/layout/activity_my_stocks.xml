@@ -9,7 +9,12 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/stocks" />
+        android:contentDescription="@string/stocks"
+        android:focusable="true">
+
+        <requestFocus />
+
+    </android.support.v7.widget.RecyclerView>
 
     <com.melnykov.fab.FloatingActionButton
         android:id="@+id/fab"

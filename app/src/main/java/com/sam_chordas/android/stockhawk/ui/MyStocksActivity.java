@@ -147,7 +147,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                                         startService(mServiceIntent);
                                     }
                                 }
-                            }).
+                            })
                             .show();
                 } else {
                     networkToast();
