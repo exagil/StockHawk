@@ -100,4 +100,9 @@ public class HistoricalQuote implements Comparable<HistoricalQuote> {
         if (this.date.after(that.date)) return 1;
         return 0;
     }
+
+    public boolean isFresh(HistoricalQuoteDate historicalQuoteDate) {
+        long dateInMillis = this.date.getTime();
+        return HistoricalQuoteDate.fromMilliseconds(dateInMillis).equals(historicalQuoteDate);
+    }
 }
