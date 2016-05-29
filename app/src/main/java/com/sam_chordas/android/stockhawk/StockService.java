@@ -10,11 +10,18 @@ import com.sam_chordas.android.stockhawk.data.models.NetworkError;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class StockService {
     public static final String DEFAULT_START_DATE = "2016-03-24";
@@ -29,30 +36,41 @@ public class StockService {
         this.stockNetworkService = stockNetworkService;
     }
 
-    public void loadOneMonthsHistoricalQuotes(String stockSymbol, final HistoricalQuotesCallback callback) {
+    public Subscription loadOneMonthsHistoricalQuotes(String stockSymbol, final HistoricalQuotesCallback callback) {
         try {
             String urlString = buildUrlStringFor(stockSymbol);
-            stockNetworkService.getHistoricalQuotes(urlString).enqueue(new Callback<HistoricalQuotesResponse>() {
-                @Override
-                public void onResponse(Call<HistoricalQuotesResponse> call, Response<HistoricalQuotesResponse> response) {
-                    try {
-                        List<HistoricalQuote> historicalQuotesList = response.body().toHistoricalQuotes();
-                        HistoricalQuotes historicalQuotes = new HistoricalQuotes(historicalQuotesList);
-                        stockProviderService.insertHistoricalQuotes(historicalQuotes);
-                        callback.onHistoricalQuotesLoaded(historicalQuotes.sortedCollection());
-                    } catch (Exception e) {
-                        onFailure(call, e);
-                    }
-                }
+            Subscription subscription = stockNetworkService.getHistoricalQuotes(urlString)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Subscriber<HistoricalQuotesResponse>() {
+                        @Override
+                        public void onCompleted() {
 
-                @Override
-                public void onFailure(Call<HistoricalQuotesResponse> call, Throwable t) {
-                    callback.onOneMonthsHistoricalQuotesLoadFailure(new NetworkError(t));
-                }
-            });
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            callback.onOneMonthsHistoricalQuotesLoadFailure(new NetworkError(e));
+                        }
+
+                        @Override
+                        public void onNext(HistoricalQuotesResponse historicalQuotesResponse) {
+                            try {
+                                List<HistoricalQuote> historicalQuotesList = null;
+                                historicalQuotesList = historicalQuotesResponse.toHistoricalQuotes();
+                                HistoricalQuotes historicalQuotes = new HistoricalQuotes(historicalQuotesList);
+                                stockProviderService.insertHistoricalQuotes(historicalQuotes);
+                                callback.onHistoricalQuotesLoaded(historicalQuotes.sortedCollection());
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+            return subscription;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     private String buildUrlStringFor(String stockSymbol) throws UnsupportedEncodingException {
