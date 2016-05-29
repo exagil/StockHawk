@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.sam_chordas.android.stockhawk.data.StockProviderService;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
+import com.sam_chordas.android.stockhawk.data.models.HistoricalQuoteDate;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotes;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotesResponse;
 import com.sam_chordas.android.stockhawk.data.models.NetworkError;
@@ -36,7 +37,7 @@ public class StockService {
         this.stockNetworkService = stockNetworkService;
     }
 
-    public Subscription loadOneMonthsHistoricalQuotes(String stockSymbol, final HistoricalQuotesCallback callback) {
+    public Subscription loadOneMonthsHistoricalQuotes(String stockSymbol, HistoricalQuoteDate eq, final HistoricalQuotesCallback callback) {
         try {
             String urlString = buildUrlStringFor(stockSymbol);
             Subscription subscription = stockNetworkService.getHistoricalQuotes(urlString)

@@ -4,6 +4,7 @@ import com.sam_chordas.android.stockhawk.StockDetailView;
 import com.sam_chordas.android.stockhawk.StockService;
 import com.sam_chordas.android.stockhawk.data.StockProviderService;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
+import com.sam_chordas.android.stockhawk.data.models.HistoricalQuoteDate;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotes;
 import com.sam_chordas.android.stockhawk.data.models.NetworkError;
 
@@ -40,13 +41,13 @@ public class StockDetailPresenter {
         });
     }
 
-    public void loadOneMonthsHistoricalQuotesFor(String stockSymbol) throws ParseException {
+    public void loadOneMonthsHistoricalQuotes(String stockSymbol, HistoricalQuoteDate historicalQuoteDate) throws ParseException {
         HistoricalQuotes historicalQuotes = stockProviderService.loadOneMonthsHistoricalQuotesFor(stockSymbol);
-        if (!historicalQuotes.isEmpty()) {
+        if (!historicalQuotes.isEmpty() && historicalQuotes.areFresh(historicalQuoteDate)) {
             stockDetailView.onOneMonthsHistoricalQuotesLoaded(historicalQuotes.collection);
             return;
         }
-        stockService.loadOneMonthsHistoricalQuotes(stockSymbol, new StockService.HistoricalQuotesCallback() {
+        stockService.loadOneMonthsHistoricalQuotes(stockSymbol, historicalQuoteDate, new StockService.HistoricalQuotesCallback() {
             public void onHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes) {
                 stockDetailView.onOneMonthsHistoricalQuotesLoaded(historicalQuotes);
             }
