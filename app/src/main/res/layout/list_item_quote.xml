@@ -14,14 +14,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/stock_symbol"
-        android:gravity="left|center_vertical"
+        android:gravity="start|center_vertical"
         tools:text="GOOG" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:gravity="right">
+        android:gravity="end">
 
         <TextView
             android:id="@+id/bid_price"
@@ -29,7 +29,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/bid_price"
+            android:paddingEnd="10sp"
+            android:paddingLeft="10sp"
             android:paddingRight="10sp"
+            android:paddingStart="10sp"
             tools:text="1000.00" />
 
         <TextView
@@ -39,8 +42,10 @@
             android:layout_height="wrap_content"
             android:background="@drawable/percent_change_pill"
             android:contentDescription="@string/percent_change"
+            android:paddingEnd="3dp"
             android:paddingLeft="3dp"
             android:paddingRight="3dp"
+            android:paddingStart="3dp"
             tools:text="100%" />
     </LinearLayout>
 </LinearLayout>
