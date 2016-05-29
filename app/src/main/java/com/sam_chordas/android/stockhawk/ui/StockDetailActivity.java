@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+import com.pnikosis.materialishprogress.ProgressWheel;
 import com.robinhood.spark.SparkView;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.StockDetailView;
@@ -33,6 +34,7 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
     private StockGraphAdapter stockGraphAdapter;
     private TextView textError;
     private SparkView sparkGraphView;
+    private ProgressWheel progressWheel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,10 +45,21 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
         setTitle(R.string.stock_detail);
         long quoteId = getIntent().getLongExtra(QuoteColumns._ID, 0);
         sparkGraphView = (SparkView) findViewById(R.id.sparkview);
+        progressWheel = (ProgressWheel) findViewById(R.id.progress_wheel);
         textError = (TextView) findViewById(R.id.text_error);
         stockGraphAdapter = new StockGraphAdapter(null);
         sparkGraphView.setAdapter(stockGraphAdapter);
         stockDetailPresenter.loadQuoteSymbolForQuoteId(quoteId);
+    }
+
+    @Override
+    public void beforeLoad() {
+        progressWheel.spin();
+    }
+
+    @Override
+    public void afterLoad() {
+        progressWheel.stopSpinning();
     }
 
     @Override

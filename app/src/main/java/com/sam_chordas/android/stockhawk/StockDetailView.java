@@ -6,6 +6,10 @@ import java.text.ParseException;
 import java.util.List;
 
 public interface StockDetailView {
+    void beforeLoad();
+
+    void afterLoad();
+
     void onSymbolLoaded(String stockSymbol) throws ParseException;
 
     void onSymbolLoadFailed();

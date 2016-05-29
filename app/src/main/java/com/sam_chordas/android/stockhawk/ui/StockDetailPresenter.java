@@ -23,11 +23,13 @@ public class StockDetailPresenter {
     }
 
     public void loadQuoteSymbolForQuoteId(long quoteId) {
+        stockDetailView.beforeLoad();
         stockProviderService.loadQuoteSymbolForQuoteId(quoteId, new StockProviderService.QuoteSymbolLoaderCallback() {
             @Override
             public void onQuoteSymbolLoaded(String quoteSymbol) {
                 // TODO: 25/05/16 Chirag - Not a good idea to handle exception here
                 try {
+                    stockDetailView.afterLoad();
                     stockDetailView.onSymbolLoaded(quoteSymbol);
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -36,24 +38,29 @@ public class StockDetailPresenter {
 
             @Override
             public void onQuoteSymbolLoadFailed() {
+                stockDetailView.afterLoad();
                 stockDetailView.onSymbolLoadFailed();
             }
         });
     }
 
     public void loadOneMonthsHistoricalQuotes(String stockSymbol, HistoricalQuoteDate historicalQuoteDate) throws ParseException {
+        stockDetailView.beforeLoad();
         HistoricalQuotes historicalQuotes = stockProviderService.loadOneMonthsHistoricalQuotesFor(stockSymbol);
         if (!historicalQuotes.isEmpty() && historicalQuotes.areFresh(historicalQuoteDate)) {
+            stockDetailView.afterLoad();
             stockDetailView.onOneMonthsHistoricalQuotesLoaded(historicalQuotes.collection);
             return;
         }
         stockService.loadOneMonthsHistoricalQuotes(stockSymbol, historicalQuoteDate, new StockService.HistoricalQuotesCallback() {
             public void onHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes) {
+                stockDetailView.afterLoad();
                 stockDetailView.onOneMonthsHistoricalQuotesLoaded(historicalQuotes);
             }
 
             @Override
             public void onOneMonthsHistoricalQuotesLoadFailure(NetworkError networkError) {
+                stockDetailView.afterLoad();
                 stockDetailView.onOneMonthsHistoricalQuotesLoadFailure(networkError.error());
             }
         });

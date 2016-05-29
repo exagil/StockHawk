@@ -89,6 +89,8 @@ public class StockDetailPresenterTest {
         }).when(stockService).loadOneMonthsHistoricalQuotes(eq("FB"), eq(historicalQuoteDate), Matchers.<StockService.HistoricalQuotesCallback>any());
         stockDetailPresenter.loadOneMonthsHistoricalQuotes("FB", historicalQuoteDate);
         verify(stockDetailView).onOneMonthsHistoricalQuotesLoaded(historicalQuoteList);
+        verify(stockDetailView).beforeLoad();
+        verify(stockDetailView).afterLoad();
         verifyNoMoreInteractions(stockDetailView);
     }
 
@@ -108,6 +110,8 @@ public class StockDetailPresenterTest {
         }).when(stockService).loadOneMonthsHistoricalQuotes(eq("YHOO"), eq(historicalQuoteDate), Matchers.<StockService.HistoricalQuotesCallback>any());
         stockDetailPresenter.loadOneMonthsHistoricalQuotes("YHOO", HistoricalQuoteDate.fromMilliseconds(1464516610000l));
         verify(stockDetailView).onOneMonthsHistoricalQuotesLoadFailure("Some Error");
+        verify(stockDetailView).beforeLoad();
+        verify(stockDetailView).afterLoad();
         verifyNoMoreInteractions(stockDetailView);
     }
 
@@ -120,8 +124,10 @@ public class StockDetailPresenterTest {
         when(stockProviderService.loadOneMonthsHistoricalQuotesFor("FB")).thenReturn(new HistoricalQuotes(historicalQuoteList));
         stockDetailPresenter.loadOneMonthsHistoricalQuotes("FB", historicalQuoteDate);
         verify(stockDetailView).onOneMonthsHistoricalQuotesLoaded(historicalQuoteList);
-        verifyNoMoreInteractions(stockDetailView);
+        verify(stockDetailView).beforeLoad();
+        verify(stockDetailView).afterLoad();
         verifyNoMoreInteractions(stockService);
+        verifyNoMoreInteractions(stockDetailView);
     }
 
     @Test
@@ -146,6 +152,8 @@ public class StockDetailPresenterTest {
         }).when(stockService).loadOneMonthsHistoricalQuotes(eq("FB"), eq(historicalQuoteDate), Matchers.<StockService.HistoricalQuotesCallback>any());
         stockDetailPresenter.loadOneMonthsHistoricalQuotes("FB", historicalQuoteDate);
         verify(stockDetailView).onOneMonthsHistoricalQuotesLoaded(newHistoricalQuoteList);
+        verify(stockDetailView).beforeLoad();
+        verify(stockDetailView).afterLoad();
         verifyNoMoreInteractions(stockDetailView);
     }
 }
