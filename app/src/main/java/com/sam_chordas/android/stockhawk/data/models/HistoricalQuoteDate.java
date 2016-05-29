@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class HistoricalQuoteDate {
     private final Date date;
-    private SimpleDateFormat HISTORICAL_QUOTE_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
+    private SimpleDateFormat HISTORICAL_QUOTE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     public static HistoricalQuoteDate fromMilliseconds(long milliseconds) {
         return new HistoricalQuoteDate(milliseconds);
@@ -22,11 +22,19 @@ public class HistoricalQuoteDate {
         if (this == o) return true;
         if (o == null || !(o instanceof HistoricalQuoteDate)) return false;
         HistoricalQuoteDate that = (HistoricalQuoteDate) o;
-        return HISTORICAL_QUOTE_DATE_FORMAT.format(this.date).equals(HISTORICAL_QUOTE_DATE_FORMAT.format(that.date));
+        return toQueryableDateFormat(this.date).equals(toQueryableDateFormat(that.date));
     }
 
     @Override
     public int hashCode() {
-        return HISTORICAL_QUOTE_DATE_FORMAT.format(this.date) != null ? HISTORICAL_QUOTE_DATE_FORMAT.format(this.date).hashCode() : 0;
+        return toQueryableDateFormat(this.date) != null ? toQueryableDateFormat(this.date).hashCode() : 0;
+    }
+
+    public String queryable() {
+        return toQueryableDateFormat(this.date);
+    }
+
+    private String toQueryableDateFormat(Date date) {
+        return HISTORICAL_QUOTE_DATE_FORMAT.format(date);
     }
 }
