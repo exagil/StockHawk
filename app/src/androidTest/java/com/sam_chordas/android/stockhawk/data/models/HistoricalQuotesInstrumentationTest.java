@@ -2,18 +2,31 @@ package com.sam_chordas.android.stockhawk.data.models;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.test.AndroidTestCase;
 
 import com.sam_chordas.android.stockhawk.data.HistoryColumns;
 import com.sam_chordas.android.stockhawk.data.generated.HistoryProvider;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.text.ParseException;
 import java.util.Date;
 
 public class HistoricalQuotesInstrumentationTest extends AndroidTestCase {
+    @Before
+    public void setup() {
+        resetDatabase();
+    }
+
+    @After
+    public void tearDown() {
+        resetDatabase();
+    }
+
     @Test
     public void testHistoricalQuotesKnowsHowToConvertItselfIntoContentValues() {
         HistoricalQuote firstHistoricalQuote = new HistoricalQuote("FB", new Date(1463899584953l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
@@ -52,5 +65,10 @@ public class HistoricalQuotesInstrumentationTest extends AndroidTestCase {
         Cursor historyCursor = contentResolver.query(HistoryProvider.History.CONTENT_URI, null, null, null, null);
         HistoricalQuotes expectedHistoricalQuotes = new HistoricalQuotes(firstHistoricalQuote, secondHistoricalQuote);
         assertEquals(expectedHistoricalQuotes, HistoricalQuotes.fromCursor(historyCursor));
+    }
+
+    private void resetDatabase() {
+        getContext().deleteDatabase("quoteDatabase.db");
+        getContext().openOrCreateDatabase("quoteDatabase.db", Context.MODE_PRIVATE, null);
     }
 }

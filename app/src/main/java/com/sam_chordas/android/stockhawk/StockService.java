@@ -14,19 +14,12 @@ import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
 
 public class StockService {
-    public static final String DEFAULT_START_DATE = "2016-03-24";
-    public static final String DEFAULT_END_DATE = "2016-04-25";
     private Context context;
     private StockProviderService stockProviderService;
     private StockNetworkService stockNetworkService;
@@ -37,9 +30,10 @@ public class StockService {
         this.stockNetworkService = stockNetworkService;
     }
 
-    public Subscription loadOneMonthsHistoricalQuotes(String stockSymbol, HistoricalQuoteDate eq, final HistoricalQuotesCallback callback) {
+    public Subscription loadOneMonthsHistoricalQuotes(String stockSymbol, HistoricalQuoteDate historicalQuoteDate, final HistoricalQuotesCallback callback) {
         try {
-            String urlString = buildUrlStringFor(stockSymbol);
+            HistoricalQuoteDate startHistoricalQuoteDate = historicalQuoteDate.travelOneMonthBack();
+            String urlString = buildUrlStringFor(stockSymbol, startHistoricalQuoteDate.queryable(), historicalQuoteDate.queryable());
             Subscription subscription = stockNetworkService.getHistoricalQuotes(urlString)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -73,11 +67,11 @@ public class StockService {
         return null;
     }
 
-    private String buildUrlStringFor(String stockSymbol) throws UnsupportedEncodingException {
+    private String buildUrlStringFor(String stockSymbol, String queryableStartDate, String queryableEndDate) throws UnsupportedEncodingException {
         String baseUrl = context.getString(R.string.base_url);
         String historicalDataQuery = "select * from yahoo.finance.historicaldata where symbol='"
-                + stockSymbol + "' and startDate='" + DEFAULT_START_DATE + "' and endDate='" +
-                DEFAULT_END_DATE + "'";
+                + stockSymbol + "' and startDate='" + queryableStartDate + "' and endDate='" +
+                queryableEndDate + "'";
         String postQuery = "&format=json&env=http://datatables.org/alltables.env";
         return baseUrl + URLEncoder.encode(historicalDataQuery, "UTF-8") + postQuery;
     }
