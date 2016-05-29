@@ -58,4 +58,11 @@ public class HistoricalQuoteDateTest {
         HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(1464480001000l);
         Assert.assertEquals("2016-05-29", historicalQuoteDate.queryable());
     }
+
+    @Test
+    public void testHistoricalQuoteDateKnowsItsCorrespondingDateOneMonthBack() {
+        HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(1464480001000l);
+        HistoricalQuoteDate expectedHistoricalQuoteDate = HistoricalQuoteDate.fromMilliseconds(1461888001000l);
+        assertEquals(expectedHistoricalQuoteDate, historicalQuoteDate.travelOneMonthBack());
+    }
 }

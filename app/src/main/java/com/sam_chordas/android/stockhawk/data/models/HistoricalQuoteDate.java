@@ -6,14 +6,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class HistoricalQuoteDate {
+    public static final long MILLISECONDS_IN_THIRTY_DAYS = 2592000000l;
     private final Date date;
     private SimpleDateFormat HISTORICAL_QUOTE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private long milliseconds;
 
     public static HistoricalQuoteDate fromMilliseconds(long milliseconds) {
         return new HistoricalQuoteDate(milliseconds);
     }
 
     private HistoricalQuoteDate(long milliseconds) {
+        this.milliseconds = milliseconds;
         this.date = new Date(milliseconds);
     }
 
@@ -32,6 +35,10 @@ public class HistoricalQuoteDate {
 
     public String queryable() {
         return toQueryableDateFormat(this.date);
+    }
+
+    public HistoricalQuoteDate travelOneMonthBack() {
+        return new HistoricalQuoteDate(this.milliseconds - MILLISECONDS_IN_THIRTY_DAYS);
     }
 
     private String toQueryableDateFormat(Date date) {
