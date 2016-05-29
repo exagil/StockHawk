@@ -24,7 +24,7 @@ public class HistoricalQuoteInstrumentationTest extends AndroidTestCase {
         );
         ContentValues expectedContentValues = new ContentValues();
         expectedContentValues.put(HistoryColumns.SYMBOL, "FB");
-        expectedContentValues.put(HistoryColumns.DATE, "2016-05-22");
+        expectedContentValues.put(HistoryColumns.DATE, 20160522l);
         expectedContentValues.put(HistoryColumns.HIGH, 2.3);
         expectedContentValues.put(HistoryColumns.LOW, 2.3);
         expectedContentValues.put(HistoryColumns.OPEN, 2.3);

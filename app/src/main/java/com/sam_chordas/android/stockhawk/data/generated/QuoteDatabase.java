@@ -23,7 +23,7 @@ public class QuoteDatabase extends SQLiteOpenHelper {
     public static final String HISTORY = "CREATE TABLE history ("
             + HistoryColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + HistoryColumns.SYMBOL + " TEXT NOT NULL,"
-            + HistoryColumns.DATE + " TEXT NOT NULL,"
+            + HistoryColumns.DATE + " NUMERIC NOT NULL,"
             + HistoryColumns.OPEN + " REAL NOT NULL,"
             + HistoryColumns.HIGH + " REAL NOT NULL,"
             + HistoryColumns.LOW + " REAL NOT NULL,"

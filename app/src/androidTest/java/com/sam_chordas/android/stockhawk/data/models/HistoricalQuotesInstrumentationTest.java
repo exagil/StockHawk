@@ -21,7 +21,7 @@ public class HistoricalQuotesInstrumentationTest extends AndroidTestCase {
         HistoricalQuotes historicalQuotes = new HistoricalQuotes(firstHistoricalQuote, secondHistoricalQuote);
         ContentValues firstContentValue = new ContentValues();
         firstContentValue.put(HistoryColumns.SYMBOL, "FB");
-        firstContentValue.put(HistoryColumns.DATE, "2016-05-22");
+        firstContentValue.put(HistoryColumns.DATE, 20160522l);
         firstContentValue.put(HistoryColumns.HIGH, 2.3);
         firstContentValue.put(HistoryColumns.LOW, 2.3);
         firstContentValue.put(HistoryColumns.OPEN, 2.3);
@@ -30,7 +30,7 @@ public class HistoricalQuotesInstrumentationTest extends AndroidTestCase {
         firstContentValue.put(HistoryColumns.ADJ_CLOSE, 2.3);
         ContentValues secondContentValue = new ContentValues();
         secondContentValue.put(HistoryColumns.SYMBOL, "APPL");
-        secondContentValue.put(HistoryColumns.DATE, "2016-05-23");
+        secondContentValue.put(HistoryColumns.DATE, 20160523l);
         secondContentValue.put(HistoryColumns.HIGH, 2.3);
         secondContentValue.put(HistoryColumns.LOW, 2.3);
         secondContentValue.put(HistoryColumns.OPEN, 2.3);

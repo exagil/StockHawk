@@ -33,7 +33,8 @@ public class HistoricalQuoteResponse {
                 symbol,
                 parsedDate,
                 Double.parseDouble(open),
-                Double.parseDouble(high), Double.parseDouble(low),
+                Double.parseDouble(high),
+                Double.parseDouble(low),
                 Double.parseDouble(close),
                 Double.parseDouble(volume),
                 Double.parseDouble(adjClose)

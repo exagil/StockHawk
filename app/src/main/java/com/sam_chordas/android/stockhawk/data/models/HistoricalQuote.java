@@ -10,8 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class HistoricalQuote implements Comparable<HistoricalQuote> {
-    public static final String FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(FORMAT_YYYY_MM_DD);
+    public static final SimpleDateFormat PERSISTABLE_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
     public String symbol;
     public Date date;
     public Double open;
@@ -42,7 +41,7 @@ public class HistoricalQuote implements Comparable<HistoricalQuote> {
         if (o == null || !(o instanceof HistoricalQuote)) return false;
         HistoricalQuote that = (HistoricalQuote) o;
         return this.symbol.equals(that.symbol) &&
-                persistableDate(this.date).equals(persistableDate(that.date)) &&
+                persistableDate(this.date) == persistableDate(that.date) &&
                 this.open.equals(that.open) &&
                 this.high.equals(that.high) &&
                 this.low.equals(that.low) &&
@@ -86,12 +85,13 @@ public class HistoricalQuote implements Comparable<HistoricalQuote> {
         String close = cursor.getString(cursor.getColumnIndex(HistoryColumns.CLOSE));
         String volume = cursor.getString(cursor.getColumnIndex(HistoryColumns.VOLUME));
         String adjClose = cursor.getString(cursor.getColumnIndex(HistoryColumns.ADJ_CLOSE));
-        return new HistoricalQuote(symbol, DATE_FORMAT.parse(date), new Double(open), new Double(high),
+        return new HistoricalQuote(symbol, PERSISTABLE_DATE_FORMAT.parse(date), new Double(open), new Double(high),
                 new Double(low), new Double(close), new Double(volume), new Double(adjClose));
     }
 
-    private String persistableDate(Date date) {
-        return DATE_FORMAT.format(date);
+    private long persistableDate(Date date) {
+        String formattedPersistableDate = PERSISTABLE_DATE_FORMAT.format(date);
+        return Long.parseLong(formattedPersistableDate);
     }
 
     @Override
