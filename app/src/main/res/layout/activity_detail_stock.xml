@@ -10,7 +10,9 @@
         android:id="@+id/sparkview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:spark_lineColor="@color/common_google_signin_btn_text_dark_pressed" />
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"
+        app:spark_lineColor="@color/md_material_blue_600" />
 
     <TextView
         android:id="@+id/text_error"
