@@ -11,7 +11,7 @@ public class HistoricalQuoteDateTest {
     public static final long MILLISECONDS_UNTIL_20160529_0000HRS = 1464480001000l;
     public static final long MILLISECONDS_UNTIL_20160627_1010HRS = 1464343810000l;
     public static final long MILLISECONDS_UNTIL_20160530_0000HRS = 1464566401000l;
-    public static final long MILLISECONDS_UNTIL_20160529_1010HRS = 1464516610000l;
+    public static final long MILLISECONDS_UNTIL_20160529_1212HRS = 1464516610000l;
     public static final long MILLISECONDS_UNTIL_20160429_0000HRS = 1461888001000l;
     public static final long MILLISECONDS_UNTIL_20160525_1010HRS = 1464171000000l;
 
@@ -55,14 +55,14 @@ public class HistoricalQuoteDateTest {
     @Test
     public void testHistoricalQuoteDatesWithDifferentMillisecondsButSameDatesShouldBeEqual() {
         HistoricalQuoteDate thisHistoricalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160529_0000HRS);
-        HistoricalQuoteDate thatHistoricalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160529_1010HRS);
+        HistoricalQuoteDate thatHistoricalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160529_1212HRS);
         assertTrue(thisHistoricalQuoteDate.equals(thatHistoricalQuoteDate));
     }
 
     @Test
     public void testHistoricalQuoteDatesWhichAreSameInBusinessContextHaveSameHashCodes() {
         HistoricalQuoteDate thisHistoricalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160529_0000HRS);
-        HistoricalQuoteDate thatHistoricalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160529_1010HRS);
+        HistoricalQuoteDate thatHistoricalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160529_1212HRS);
         assertEquals(thisHistoricalQuoteDate.hashCode(), thatHistoricalQuoteDate.hashCode());
     }
 
@@ -74,9 +74,16 @@ public class HistoricalQuoteDateTest {
     }
 
     @Test
+    public void testHistoricalQuoteDatesWithOneOnSaturdayAndOtherOnUpcomingSundayAreEqual() {
+        HistoricalQuoteDate thisHistoricalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160529_1212HRS);
+        HistoricalQuoteDate thatHistoricalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160528_1212HRS);
+        assertEquals(thatHistoricalQuoteDate, thisHistoricalQuoteDate);
+    }
+
+    @Test
     public void testThatHistoricalQuoteDateOfFridayIsEqualToHistoricalQuoteDateOfUpcomingSunday() {
         HistoricalQuoteDate thisHistoricalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160627_1010HRS);
-        HistoricalQuoteDate thatHistoricalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160529_1010HRS);
+        HistoricalQuoteDate thatHistoricalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160529_1212HRS);
         assertEquals(thatHistoricalQuoteDate, thisHistoricalQuoteDate);
     }
 

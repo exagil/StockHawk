@@ -27,35 +27,35 @@ public class HistoricalQuoteDate {
         if (this == o) return true;
         if (o == null || !(o instanceof HistoricalQuoteDate)) return false;
         HistoricalQuoteDate that = (HistoricalQuoteDate) o;
-        return toQueryableDateFormat(this.date).equals(toQueryableDateFormat(that.date));
+        return toQueryableDateFormat(this).equals(toQueryableDateFormat(that));
     }
 
     @Override
     public int hashCode() {
-        return toQueryableDateFormat(this.date) != null ? toQueryableDateFormat(this.date).hashCode() : 0;
+        return toQueryableDateFormat(this) != null ? toQueryableDateFormat(this).hashCode() : 0;
     }
 
     public String queryable() {
-        return toQueryableDateFormat(this.date);
+        return toQueryableDateFormat(this);
     }
 
     public HistoricalQuoteDate travelOneMonthBack() {
         return new HistoricalQuoteDate(this.milliseconds - MILLISECONDS_IN_THIRTY_DAYS);
     }
 
-    private String toQueryableDateFormat(Date date) {
+    private String toQueryableDateFormat(HistoricalQuoteDate historicalQuoteDate) {
         String queryableDateFormat;
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
+        calendar.setTime(historicalQuoteDate.date);
         switch (calendar.get(Calendar.DAY_OF_WEEK)) {
             case Calendar.SATURDAY:
-                queryableDateFormat = HISTORICAL_QUOTE_DATE_FORMAT.format(new Date(milliseconds - MILLISECONDS_IN_ONE_DAY));
+                queryableDateFormat = HISTORICAL_QUOTE_DATE_FORMAT.format(new Date(historicalQuoteDate.milliseconds - MILLISECONDS_IN_ONE_DAY));
                 break;
             case Calendar.SUNDAY:
-                queryableDateFormat = HISTORICAL_QUOTE_DATE_FORMAT.format(new Date(milliseconds - 2 * MILLISECONDS_IN_ONE_DAY));
+                queryableDateFormat = HISTORICAL_QUOTE_DATE_FORMAT.format(new Date(historicalQuoteDate.milliseconds - 2 * MILLISECONDS_IN_ONE_DAY));
                 break;
             default:
-                queryableDateFormat = HISTORICAL_QUOTE_DATE_FORMAT.format(date);
+                queryableDateFormat = HISTORICAL_QUOTE_DATE_FORMAT.format(historicalQuoteDate.date);
                 break;
         }
         return queryableDateFormat;
