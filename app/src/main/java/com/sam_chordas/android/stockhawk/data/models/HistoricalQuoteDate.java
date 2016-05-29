@@ -7,19 +7,15 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class HistoricalQuoteDate {
-    public static final long MILLISECONDS_IN_THIRTY_DAYS = 2592000000l;
-    public static final long MILLISECONDS_IN_ONE_DAY = 86400000l;
+    private static final long MILLISECONDS_IN_THIRTY_DAYS = 2592000000l;
+    private static final long MILLISECONDS_IN_ONE_DAY = 86400000l;
     private final Date date;
-    private SimpleDateFormat HISTORICAL_QUOTE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat QUERYABLE_HISTORICAL_QUOTE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat PERSISTABLE_HISTORICAL_QUOTE_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
     private long milliseconds;
 
     public static HistoricalQuoteDate fromMilliseconds(long milliseconds) {
         return new HistoricalQuoteDate(milliseconds);
-    }
-
-    private HistoricalQuoteDate(long milliseconds) {
-        this.milliseconds = milliseconds;
-        this.date = new Date(milliseconds);
     }
 
     @Override
@@ -27,37 +23,47 @@ public class HistoricalQuoteDate {
         if (this == o) return true;
         if (o == null || !(o instanceof HistoricalQuoteDate)) return false;
         HistoricalQuoteDate that = (HistoricalQuoteDate) o;
-        return toQueryableDateFormat(this).equals(toQueryableDateFormat(that));
+        return toDateFormat(this, QUERYABLE_HISTORICAL_QUOTE_DATE_FORMAT).equals(toDateFormat(that, QUERYABLE_HISTORICAL_QUOTE_DATE_FORMAT));
     }
 
     @Override
     public int hashCode() {
-        return toQueryableDateFormat(this) != null ? toQueryableDateFormat(this).hashCode() : 0;
+        return toDateFormat(this, QUERYABLE_HISTORICAL_QUOTE_DATE_FORMAT) != null ? toDateFormat(this, QUERYABLE_HISTORICAL_QUOTE_DATE_FORMAT).hashCode() : 0;
     }
 
     public String queryable() {
-        return toQueryableDateFormat(this);
+        return toDateFormat(this, QUERYABLE_HISTORICAL_QUOTE_DATE_FORMAT);
     }
 
     public HistoricalQuoteDate travelOneMonthBack() {
         return new HistoricalQuoteDate(this.milliseconds - MILLISECONDS_IN_THIRTY_DAYS);
     }
 
-    private String toQueryableDateFormat(HistoricalQuoteDate historicalQuoteDate) {
-        String queryableDateFormat;
+    public long persistable() {
+        String persistableDateString = toDateFormat(this, PERSISTABLE_HISTORICAL_QUOTE_DATE_FORMAT);
+        return Long.parseLong(persistableDateString);
+    }
+
+    private HistoricalQuoteDate(long milliseconds) {
+        this.milliseconds = milliseconds;
+        this.date = new Date(milliseconds);
+    }
+
+    private String toDateFormat(HistoricalQuoteDate historicalQuoteDate, SimpleDateFormat dateFormat) {
+        String formattedDate;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(historicalQuoteDate.date);
         switch (calendar.get(Calendar.DAY_OF_WEEK)) {
             case Calendar.SATURDAY:
-                queryableDateFormat = HISTORICAL_QUOTE_DATE_FORMAT.format(new Date(historicalQuoteDate.milliseconds - MILLISECONDS_IN_ONE_DAY));
+                formattedDate = dateFormat.format(new Date(historicalQuoteDate.milliseconds - MILLISECONDS_IN_ONE_DAY));
                 break;
             case Calendar.SUNDAY:
-                queryableDateFormat = HISTORICAL_QUOTE_DATE_FORMAT.format(new Date(historicalQuoteDate.milliseconds - 2 * MILLISECONDS_IN_ONE_DAY));
+                formattedDate = dateFormat.format(new Date(historicalQuoteDate.milliseconds - 2 * MILLISECONDS_IN_ONE_DAY));
                 break;
             default:
-                queryableDateFormat = HISTORICAL_QUOTE_DATE_FORMAT.format(historicalQuoteDate.date);
+                formattedDate = dateFormat.format(historicalQuoteDate.date);
                 break;
         }
-        return queryableDateFormat;
+        return formattedDate;
     }
 }
