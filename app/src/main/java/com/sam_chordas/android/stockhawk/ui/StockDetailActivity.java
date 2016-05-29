@@ -64,7 +64,7 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
 
     @Override
     public void onSymbolLoaded(String stockSymbol) throws ParseException {
-        stockDetailPresenter.loadOneMonthsHistoricalQuotes(stockSymbol, HistoricalQuoteDate.fromMilliseconds(1464516610000l));
+        stockDetailPresenter.loadOneMonthsHistoricalQuotes(stockSymbol, HistoricalQuoteDate.fromMilliseconds(System.currentTimeMillis()));
     }
 
     @Override

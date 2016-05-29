@@ -46,7 +46,7 @@ public class StockDetailPresenter {
 
     public void loadOneMonthsHistoricalQuotes(String stockSymbol, HistoricalQuoteDate historicalQuoteDate) throws ParseException {
         stockDetailView.beforeLoad();
-        HistoricalQuotes historicalQuotes = stockProviderService.loadOneMonthsHistoricalQuotesFor(stockSymbol);
+        HistoricalQuotes historicalQuotes = stockProviderService.loadOneMonthsHistoricalQuotes(stockSymbol, historicalQuoteDate);
         if (!historicalQuotes.isEmpty() && historicalQuotes.areFresh(historicalQuoteDate)) {
             stockDetailView.afterLoad();
             stockDetailView.onOneMonthsHistoricalQuotesLoaded(historicalQuotes.collection);

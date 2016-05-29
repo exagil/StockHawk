@@ -8,6 +8,7 @@ import android.support.v4.content.Loader;
 
 import com.sam_chordas.android.stockhawk.data.generated.HistoryProvider;
 import com.sam_chordas.android.stockhawk.data.generated.QuoteProvider;
+import com.sam_chordas.android.stockhawk.data.models.HistoricalQuoteDate;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotes;
 
 import java.text.ParseException;
@@ -54,8 +55,9 @@ public class StockProviderService implements Loader.OnLoadCompleteListener<Curso
         context.getContentResolver().bulkInsert(HistoryProvider.History.CONTENT_URI, historicalQuotes.toContentValues());
     }
 
-    public HistoricalQuotes loadOneMonthsHistoricalQuotesFor(String quoteSymbol) throws ParseException {
-        Cursor historicalQuotesCursor = context.getContentResolver().query(HistoryProvider.History.CONTENT_URI, null, HistoryColumns.SYMBOL + "=?", new String[]{quoteSymbol}, null);
+    public HistoricalQuotes loadOneMonthsHistoricalQuotes(String quoteSymbol, HistoricalQuoteDate endHistoricalQuoteDate) throws ParseException {
+        HistoricalQuoteDate startHistoricalQuoteDate = endHistoricalQuoteDate.travelOneMonthBack();
+        Cursor historicalQuotesCursor = context.getContentResolver().query(HistoryProvider.History.CONTENT_URI, null, HistoryColumns.SYMBOL + "=? AND " + HistoryColumns.DATE + " BETWEEN ? AND ?", new String[]{quoteSymbol, startHistoricalQuoteDate.persistable(), endHistoricalQuoteDate.persistable()}, null);
         return HistoricalQuotes.fromCursor(historicalQuotesCursor);
     }
 

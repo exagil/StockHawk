@@ -5,10 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.test.AndroidTestCase;
 
+import com.google.gson.Gson;
 import com.sam_chordas.android.stockhawk.data.generated.HistoryProvider;
 import com.sam_chordas.android.stockhawk.data.generated.QuoteProvider;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
+import com.sam_chordas.android.stockhawk.data.models.HistoricalQuoteDate;
+import com.sam_chordas.android.stockhawk.data.models.HistoricalQuoteResponse;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotes;
+import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotesResponse;
 import com.sam_chordas.android.stockhawk.data.models.NullHistoricalQuotes;
 
 import org.junit.After;
@@ -16,14 +20,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
 
 import static com.sam_chordas.android.stockhawk.data.StockProviderService.QuoteSymbolLoaderCallback;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class StockProviderServiceInstrumentationTest extends AndroidTestCase {
+
+    public static final long MILLISECONDS_UNTIL_20160522_0626HRS = 1463899584953l;
+    public static final long MILLISECONDS_UNTIL_20160524_1010HRS = 1464084610000l;
+    public static final long MILLISECONDS_UNTIL_20160529_1010HRS = 1464516610000l;
+
     @Before
     public void setup() {
         resetDatabase();
@@ -100,17 +111,53 @@ public class StockProviderServiceInstrumentationTest extends AndroidTestCase {
     public void testThatStockProviderServiceLoadsNoHistoricalQuotesWhenNonePresent() throws ParseException {
         HistoricalQuotes expectedHistoricalQuotes = new NullHistoricalQuotes();
         StockProviderService stockProviderService = new StockProviderService(getContext());
-        assertEquals(expectedHistoricalQuotes, stockProviderService.loadOneMonthsHistoricalQuotesFor("APPL"));
+        HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160524_1010HRS);
+        assertEquals(expectedHistoricalQuotes, stockProviderService.loadOneMonthsHistoricalQuotes("APPL", historicalQuoteDate));
     }
 
     @Test
-    public void testThatStockProviderServiceKnowsHowToFetchHistoricalQuotesForAParticularSymbol() throws ParseException {
-        HistoricalQuote firstHistoricalQuote = new HistoricalQuote("APPL", new Date(1463899584953l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
-        HistoricalQuote secondHistoricalQuote = new HistoricalQuote("APPL", new Date(1464084610000l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+    public void testThatStockProviderServiceKnowsHowToFetchOneMonthsHistoricalQuotesForAParticularSymbolGivenThatOneMonthsStocksDontExist() throws ParseException {
+        HistoricalQuote firstHistoricalQuote = new HistoricalQuote("APPL", new Date(MILLISECONDS_UNTIL_20160522_0626HRS), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        HistoricalQuote secondHistoricalQuote = new HistoricalQuote("APPL", new Date(MILLISECONDS_UNTIL_20160524_1010HRS), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
         HistoricalQuotes expectedHistoricalQuotes = new HistoricalQuotes(firstHistoricalQuote, secondHistoricalQuote);
         StockProviderService stockProviderService = new StockProviderService(getContext());
         stockProviderService.insertHistoricalQuotes(expectedHistoricalQuotes);
-        assertEquals(expectedHistoricalQuotes, stockProviderService.loadOneMonthsHistoricalQuotesFor("APPL"));
+        HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160524_1010HRS);
+        assertEquals(expectedHistoricalQuotes, stockProviderService.loadOneMonthsHistoricalQuotes("APPL", historicalQuoteDate));
+    }
+
+    @Test
+    public void testThatStockProviderServiceKnowsHowToFetchOneMonthsHistoricalQuotesGivenThatTheyExist() throws ParseException {
+        InputStreamReader historicalQuotesReader = new InputStreamReader(HistoricalQuoteResponse.class.getClassLoader().getResourceAsStream("historical_quotes_fb_20160429_20160527.json"));
+        HistoricalQuotesResponse historicalQuotesResponse = new Gson().fromJson(historicalQuotesReader, HistoricalQuotesResponse.class);
+        final List<HistoricalQuote> historicalQuoteList = historicalQuotesResponse.toHistoricalQuotes();
+        HistoricalQuotes historicalQuotes = new HistoricalQuotes(historicalQuoteList);
+        StockProviderService stockProviderService = new StockProviderService(getContext());
+        stockProviderService.insertHistoricalQuotes(historicalQuotes);
+        HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160529_1010HRS);
+        HistoricalQuotes expectedHistoricalQuotesCollection = new HistoricalQuotes(historicalQuotes.sortedCollection());
+        HistoricalQuotes actualHistoricalQuotesCollection = stockProviderService.loadOneMonthsHistoricalQuotes("FB", historicalQuoteDate);
+        assertEquals(expectedHistoricalQuotesCollection, actualHistoricalQuotesCollection);
+    }
+
+    @Test
+    public void testThatStockProviderServiceKnowsHowToFetchExactlyOneMonthsHistoricalQuotesGivenQuotesMoreThanOneMonthExist() throws ParseException {
+        InputStreamReader historicalQuotesReader = new InputStreamReader(HistoricalQuoteResponse.class.getClassLoader().getResourceAsStream("historical_quotes_fb_20160329_20160527.json"));
+        HistoricalQuotesResponse historicalQuotesResponse = new Gson().fromJson(historicalQuotesReader, HistoricalQuotesResponse.class);
+        final List<HistoricalQuote> historicalQuoteList = historicalQuotesResponse.toHistoricalQuotes();
+        HistoricalQuotes historicalQuotes = new HistoricalQuotes(historicalQuoteList);
+        StockProviderService stockProviderService = new StockProviderService(getContext());
+        stockProviderService.insertHistoricalQuotes(historicalQuotes);
+
+        InputStreamReader expectedHistoricalQuotesReader = new InputStreamReader(HistoricalQuoteResponse.class.getClassLoader().getResourceAsStream("historical_quotes_fb_20160429_20160527.json"));
+        HistoricalQuotesResponse expectedHistoricalQuotesResponse = new Gson().fromJson(expectedHistoricalQuotesReader, HistoricalQuotesResponse.class);
+        final List<HistoricalQuote> expectedHistoricalQuoteList = expectedHistoricalQuotesResponse.toHistoricalQuotes();
+        HistoricalQuotes expectedHistoricalQuotes = new HistoricalQuotes(expectedHistoricalQuoteList);
+
+        HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160529_1010HRS);
+        HistoricalQuotes expectedHistoricalQuotesCollection = new HistoricalQuotes(expectedHistoricalQuotes.sortedCollection());
+        HistoricalQuotes actualHistoricalQuotesCollection = stockProviderService.loadOneMonthsHistoricalQuotes("FB", historicalQuoteDate);
+        assertEquals(expectedHistoricalQuotesCollection, actualHistoricalQuotesCollection);
     }
 
     private void resetDatabase() {

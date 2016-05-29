@@ -74,8 +74,8 @@ public class StockDetailPresenterTest {
 
     @Test
     public void shouldLoadOneMonthsHistoricalQuotesWhenLocalNotPresentAndFetchedThemSuccessfully() throws ParseException {
-        when(stockProviderService.loadOneMonthsHistoricalQuotesFor("FB")).thenReturn(new NullHistoricalQuotes());
         HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(1464516610000l);
+        when(stockProviderService.loadOneMonthsHistoricalQuotes("FB", historicalQuoteDate)).thenReturn(new NullHistoricalQuotes());
         InputStreamReader historicalQuotesReader = new InputStreamReader(HistoricalQuoteResponse.class.getClassLoader().getResourceAsStream("historical_quotes_fb_20160429_20160527.json"));
         HistoricalQuotesResponse historicalQuotesResponse = new Gson().fromJson(historicalQuotesReader, HistoricalQuotesResponse.class);
         final List<HistoricalQuote> historicalQuoteList = historicalQuotesResponse.toHistoricalQuotes();
@@ -96,8 +96,8 @@ public class StockDetailPresenterTest {
 
     @Test
     public void shouldShowErrorWhenNoLocalHistoricalQuotesPresentAndNotAbleToLoadHistoricalQuotesFromNetwork() throws ParseException {
-        when(stockProviderService.loadOneMonthsHistoricalQuotesFor("YHOO")).thenReturn(new NullHistoricalQuotes());
         HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(1464516610000l);
+        when(stockProviderService.loadOneMonthsHistoricalQuotes("YHOO", historicalQuoteDate)).thenReturn(new NullHistoricalQuotes());
         Throwable t = new Throwable("Some Error");
         final NetworkError networkError = new NetworkError(t);
         doAnswer(new Answer() {
@@ -121,7 +121,7 @@ public class StockDetailPresenterTest {
         InputStreamReader historicalQuotesReader = new InputStreamReader(HistoricalQuoteResponse.class.getClassLoader().getResourceAsStream("historical_quotes_fb_20160429_20160527.json"));
         HistoricalQuotesResponse historicalQuotesResponse = new Gson().fromJson(historicalQuotesReader, HistoricalQuotesResponse.class);
         final List<HistoricalQuote> historicalQuoteList = historicalQuotesResponse.toHistoricalQuotes();
-        when(stockProviderService.loadOneMonthsHistoricalQuotesFor("FB")).thenReturn(new HistoricalQuotes(historicalQuoteList));
+        when(stockProviderService.loadOneMonthsHistoricalQuotes("FB", historicalQuoteDate)).thenReturn(new HistoricalQuotes(historicalQuoteList));
         stockDetailPresenter.loadOneMonthsHistoricalQuotes("FB", historicalQuoteDate);
         verify(stockDetailView).onOneMonthsHistoricalQuotesLoaded(historicalQuoteList);
         verify(stockDetailView).beforeLoad();
@@ -141,7 +141,7 @@ public class StockDetailPresenterTest {
         HistoricalQuotesResponse newHistoricalQuotesResponse = new Gson().fromJson(newHistoricalQuotesReader, HistoricalQuotesResponse.class);
         final List<HistoricalQuote> newHistoricalQuoteList = newHistoricalQuotesResponse.toHistoricalQuotes();
 
-        when(stockProviderService.loadOneMonthsHistoricalQuotesFor("FB")).thenReturn(new HistoricalQuotes(oldHistoricalQuoteList));
+        when(stockProviderService.loadOneMonthsHistoricalQuotes("FB", historicalQuoteDate)).thenReturn(new HistoricalQuotes(oldHistoricalQuoteList));
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
