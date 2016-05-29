@@ -33,13 +33,16 @@ import java.net.URLEncoder;
  * and is used for the initialization and adding task as well.
  */
 public class StockTaskService extends GcmTaskService {
-    private final NetworkUtils networkUtils;
+    private NetworkUtils networkUtils = null;
     private String LOG_TAG = StockTaskService.class.getSimpleName();
 
     private OkHttpClient client = new OkHttpClient();
     private Context context;
     private StringBuilder mStoredSymbols = new StringBuilder();
     private boolean isUpdate;
+
+    public StockTaskService() {
+    }
 
     @Override
     public void onCreate() {
