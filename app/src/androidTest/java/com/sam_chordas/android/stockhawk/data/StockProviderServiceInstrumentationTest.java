@@ -100,7 +100,7 @@ public class StockProviderServiceInstrumentationTest extends AndroidTestCase {
     public void testThatStockProviderServiceLoadsNoHistoricalQuotesWhenNonePresent() throws ParseException {
         HistoricalQuotes expectedHistoricalQuotes = new NullHistoricalQuotes();
         StockProviderService stockProviderService = new StockProviderService(getContext());
-        assertEquals(expectedHistoricalQuotes, stockProviderService.loadHistoricalQuotesFor("APPL"));
+        assertEquals(expectedHistoricalQuotes, stockProviderService.loadOneMonthsHistoricalQuotesFor("APPL"));
     }
 
     @Test
@@ -110,7 +110,7 @@ public class StockProviderServiceInstrumentationTest extends AndroidTestCase {
         HistoricalQuotes expectedHistoricalQuotes = new HistoricalQuotes(firstHistoricalQuote, secondHistoricalQuote);
         StockProviderService stockProviderService = new StockProviderService(getContext());
         stockProviderService.insertHistoricalQuotes(expectedHistoricalQuotes);
-        assertEquals(expectedHistoricalQuotes, stockProviderService.loadHistoricalQuotesFor("APPL"));
+        assertEquals(expectedHistoricalQuotes, stockProviderService.loadOneMonthsHistoricalQuotesFor("APPL"));
     }
 
     private void resetDatabase() {

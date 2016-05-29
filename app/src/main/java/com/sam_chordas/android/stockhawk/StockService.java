@@ -29,7 +29,7 @@ public class StockService {
         this.stockNetworkService = stockNetworkService;
     }
 
-    public void loadHistoricalQuotes(String stockSymbol, final HistoricalQuotesCallback callback) {
+    public void loadOneMonthsHistoricalQuotes(String stockSymbol, final HistoricalQuotesCallback callback) {
         try {
             String urlString = buildUrlStringFor(stockSymbol);
             stockNetworkService.getHistoricalQuotes(urlString).enqueue(new Callback<HistoricalQuotesResponse>() {
@@ -47,7 +47,7 @@ public class StockService {
 
                 @Override
                 public void onFailure(Call<HistoricalQuotesResponse> call, Throwable t) {
-                    callback.onHistoricalQuotesLoadFailure(new NetworkError(t));
+                    callback.onOneMonthsHistoricalQuotesLoadFailure(new NetworkError(t));
                 }
             });
         } catch (UnsupportedEncodingException e) {
@@ -67,6 +67,6 @@ public class StockService {
     public interface HistoricalQuotesCallback {
         void onHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes);
 
-        void onHistoricalQuotesLoadFailure(NetworkError networkError);
+        void onOneMonthsHistoricalQuotesLoadFailure(NetworkError networkError);
     }
 }

@@ -14,7 +14,6 @@ import org.mockito.Matchers;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import java.io.InputStream;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -72,7 +71,7 @@ public class StockDetailPresenterTest {
 
     @Test
     public void shouldLoadHistoricalQuotesWhenFetchedThemSuccessfully() throws ParseException {
-        when(stockProviderService.loadHistoricalQuotesFor("YHOO")).thenReturn(new NullHistoricalQuotes());
+        when(stockProviderService.loadOneMonthsHistoricalQuotesFor("YHOO")).thenReturn(new NullHistoricalQuotes());
         final List<HistoricalQuote> historicalQuotes = new ArrayList<>();
         HistoricalQuote thisHistoricalQuote = new HistoricalQuote("FB", new Date(1464498687000l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
         HistoricalQuote thatHistoricalQuote = new HistoricalQuote("FB", new Date(1464603010000l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
@@ -85,27 +84,27 @@ public class StockDetailPresenterTest {
                 callback.onHistoricalQuotesLoaded(historicalQuotes);
                 return null;
             }
-        }).when(stockService).loadHistoricalQuotes(eq("YHOO"), Matchers.<StockService.HistoricalQuotesCallback>any());
-        stockDetailPresenter.loadHistoricalQuotes("YHOO");
-        verify(stockDetailView).onHistoricalQuotesLoaded(historicalQuotes);
+        }).when(stockService).loadOneMonthsHistoricalQuotes(eq("YHOO"), Matchers.<StockService.HistoricalQuotesCallback>any());
+        stockDetailPresenter.loadOneMonthsHistoricalQuotesFor("YHOO");
+        verify(stockDetailView).onOneMonthsHistoricalQuotesLoaded(historicalQuotes);
         verifyNoMoreInteractions(stockDetailView);
     }
 
     @Test
     public void shouldShowErrorWhenNotAbleToLoadHistoricalQuotes() throws ParseException {
-        when(stockProviderService.loadHistoricalQuotesFor("YHOO")).thenReturn(new NullHistoricalQuotes());
+        when(stockProviderService.loadOneMonthsHistoricalQuotesFor("YHOO")).thenReturn(new NullHistoricalQuotes());
         Throwable t = new Throwable("Some Error");
         final NetworkError networkError = new NetworkError(t);
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 StockService.HistoricalQuotesCallback callback = (StockService.HistoricalQuotesCallback) invocation.getArguments()[1];
-                callback.onHistoricalQuotesLoadFailure(networkError);
+                callback.onOneMonthsHistoricalQuotesLoadFailure(networkError);
                 return null;
             }
-        }).when(stockService).loadHistoricalQuotes(eq("YHOO"), Matchers.<StockService.HistoricalQuotesCallback>any());
-        stockDetailPresenter.loadHistoricalQuotes("YHOO");
-        verify(stockDetailView).onHistoricalQuotesLoadFailure("Some Error");
+        }).when(stockService).loadOneMonthsHistoricalQuotes(eq("YHOO"), Matchers.<StockService.HistoricalQuotesCallback>any());
+        stockDetailPresenter.loadOneMonthsHistoricalQuotesFor("YHOO");
+        verify(stockDetailView).onOneMonthsHistoricalQuotesLoadFailure("Some Error");
         verifyNoMoreInteractions(stockDetailView);
     }
 
@@ -114,9 +113,9 @@ public class StockDetailPresenterTest {
         List<HistoricalQuote> historicalQuotes = new ArrayList<>();
         HistoricalQuote historicalQuote = new HistoricalQuote("APPL", new Date(1463899584940l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
         historicalQuotes.add(historicalQuote);
-        when(stockProviderService.loadHistoricalQuotesFor("APPL")).thenReturn(new HistoricalQuotes(historicalQuotes));
-        stockDetailPresenter.loadHistoricalQuotes("APPL");
-        verify(stockDetailView).onHistoricalQuotesLoaded(historicalQuotes);
+        when(stockProviderService.loadOneMonthsHistoricalQuotesFor("APPL")).thenReturn(new HistoricalQuotes(historicalQuotes));
+        stockDetailPresenter.loadOneMonthsHistoricalQuotesFor("APPL");
+        verify(stockDetailView).onOneMonthsHistoricalQuotesLoaded(historicalQuotes);
         verifyNoMoreInteractions(stockDetailView);
         verifyNoMoreInteractions(stockService);
     }

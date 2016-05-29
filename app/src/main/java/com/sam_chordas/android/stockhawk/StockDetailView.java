@@ -10,7 +10,7 @@ public interface StockDetailView {
 
     void onSymbolLoadFailed();
 
-    void onHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes);
+    void onOneMonthsHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes);
 
-    void onHistoricalQuotesLoadFailure(String error);
+    void onOneMonthsHistoricalQuotesLoadFailure(String error);
 }

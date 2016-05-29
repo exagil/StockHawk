@@ -50,7 +50,7 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
 
     @Override
     public void onSymbolLoaded(String stockSymbol) throws ParseException {
-        stockDetailPresenter.loadHistoricalQuotes(stockSymbol);
+        stockDetailPresenter.loadOneMonthsHistoricalQuotesFor(stockSymbol);
     }
 
     @Override
@@ -58,14 +58,14 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
     }
 
     @Override
-    public void onHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes) {
+    public void onOneMonthsHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes) {
         sparkGraphView.setVisibility(SparkView.VISIBLE);
         textError.setVisibility(TextView.GONE);
         stockGraphAdapter.populate(historicalQuotes);
     }
 
     @Override
-    public void onHistoricalQuotesLoadFailure(String error) {
+    public void onOneMonthsHistoricalQuotesLoadFailure(String error) {
         sparkGraphView.setVisibility(SparkView.GONE);
         textError.setVisibility(TextView.VISIBLE);
         textError.setText(error);

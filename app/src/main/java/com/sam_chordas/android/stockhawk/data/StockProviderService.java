@@ -54,7 +54,7 @@ public class StockProviderService implements Loader.OnLoadCompleteListener<Curso
         context.getContentResolver().bulkInsert(HistoryProvider.History.CONTENT_URI, historicalQuotes.toContentValues());
     }
 
-    public HistoricalQuotes loadHistoricalQuotesFor(String quoteSymbol) throws ParseException {
+    public HistoricalQuotes loadOneMonthsHistoricalQuotesFor(String quoteSymbol) throws ParseException {
         Cursor historicalQuotesCursor = context.getContentResolver().query(HistoryProvider.History.CONTENT_URI, null, HistoryColumns.SYMBOL + "=?", new String[]{quoteSymbol}, null);
         return HistoricalQuotes.fromCursor(historicalQuotesCursor);
     }

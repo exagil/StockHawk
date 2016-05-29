@@ -40,20 +40,20 @@ public class StockDetailPresenter {
         });
     }
 
-    public void loadHistoricalQuotes(String stockSymbol) throws ParseException {
-        HistoricalQuotes historicalQuotes = stockProviderService.loadHistoricalQuotesFor(stockSymbol);
+    public void loadOneMonthsHistoricalQuotesFor(String stockSymbol) throws ParseException {
+        HistoricalQuotes historicalQuotes = stockProviderService.loadOneMonthsHistoricalQuotesFor(stockSymbol);
         if (!historicalQuotes.isEmpty()) {
-            stockDetailView.onHistoricalQuotesLoaded(historicalQuotes.collection);
+            stockDetailView.onOneMonthsHistoricalQuotesLoaded(historicalQuotes.collection);
             return;
         }
-        stockService.loadHistoricalQuotes(stockSymbol, new StockService.HistoricalQuotesCallback() {
+        stockService.loadOneMonthsHistoricalQuotes(stockSymbol, new StockService.HistoricalQuotesCallback() {
             public void onHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes) {
-                stockDetailView.onHistoricalQuotesLoaded(historicalQuotes);
+                stockDetailView.onOneMonthsHistoricalQuotesLoaded(historicalQuotes);
             }
 
             @Override
-            public void onHistoricalQuotesLoadFailure(NetworkError networkError) {
-                stockDetailView.onHistoricalQuotesLoadFailure(networkError.error());
+            public void onOneMonthsHistoricalQuotesLoadFailure(NetworkError networkError) {
+                stockDetailView.onOneMonthsHistoricalQuotesLoadFailure(networkError.error());
             }
         });
     }
