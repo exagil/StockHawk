@@ -1,6 +1,4 @@
 <resources>
-    <string name="action_example">Example action</string>
-    <string name="input_prefill"></string>
     <string name="base_url" translatable="false">http://query.yahooapis.com/v1/public/yql?q=</string>
     <string name="improved_base_url" translatable="false">http://query.yahooapis.com/v1/public/</string>
     <string name="quotes_query" translatable="false">select * from yahoo.finance.quotes where symbol in (</string>
