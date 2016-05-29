@@ -1,7 +1,5 @@
 package com.sam_chordas.android.stockhawk.data.models;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -54,9 +52,21 @@ public class HistoricalQuoteDateTest {
     }
 
     @Test
-    public void testHistoricalQuoteDateKnowsItsQueryableFormat() {
+    public void testThatHistoricalQuoteDateKnowsItsQueryableFormatForWeekdays() {
+        HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(1464343810000l);
+        assertEquals("2016-05-27", historicalQuoteDate.queryable());
+    }
+
+    @Test
+    public void testHistoricalQuoteDateKnowsItsQueryableFormatForSaturday() {
+        HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(1464343810000l);
+        assertEquals("2016-05-27", historicalQuoteDate.queryable());
+    }
+
+    @Test
+    public void testHistoricalQuoteDateKnowsItsQueryableFormatForSunday() {
         HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(1464480001000l);
-        Assert.assertEquals("2016-05-29", historicalQuoteDate.queryable());
+        assertEquals("2016-05-27", historicalQuoteDate.queryable());
     }
 
     @Test
