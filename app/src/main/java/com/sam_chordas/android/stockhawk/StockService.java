@@ -56,9 +56,8 @@ public class StockService {
                         @Override
                         public void onNext(HistoricalQuotesResponse historicalQuotesResponse) {
                             try {
-                                List<HistoricalQuote> historicalQuotesList = null;
-                                historicalQuotesList = historicalQuotesResponse.toHistoricalQuotes();
-                                HistoricalQuotes historicalQuotes = new HistoricalQuotes(historicalQuotesList);
+                                List<HistoricalQuote> historicalQuoteList = historicalQuotesResponse.toHistoricalQuotes();
+                                HistoricalQuotes historicalQuotes = new HistoricalQuotes(historicalQuoteList);
                                 stockProviderService.insertHistoricalQuotes(historicalQuotes);
                                 callback.onHistoricalQuotesLoaded(historicalQuotes.sortedCollection());
                             } catch (ParseException e) {
