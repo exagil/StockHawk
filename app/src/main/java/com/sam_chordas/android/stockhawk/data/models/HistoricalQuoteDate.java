@@ -39,9 +39,8 @@ public class HistoricalQuoteDate {
         return new HistoricalQuoteDate(this.milliseconds - MILLISECONDS_IN_THIRTY_DAYS);
     }
 
-    public long persistable() {
-        String persistableDateString = toDateFormat(this, PERSISTABLE_HISTORICAL_QUOTE_DATE_FORMAT);
-        return Long.parseLong(persistableDateString);
+    public String persistable() {
+        return toDateFormat(this, PERSISTABLE_HISTORICAL_QUOTE_DATE_FORMAT);
     }
 
     private HistoricalQuoteDate(long milliseconds) {

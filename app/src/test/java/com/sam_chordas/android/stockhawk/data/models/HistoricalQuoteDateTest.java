@@ -121,24 +121,24 @@ public class HistoricalQuoteDateTest {
     @Test
     public void testThatHistoricalQuoteDateKnowsItsPersistableFormatForLastDayOfTheWeek() {
         HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160627_1010HRS);
-        assertEquals(20160527l, historicalQuoteDate.persistable());
+        assertEquals("20160527", historicalQuoteDate.persistable());
     }
 
     @Test
     public void testHistoricalQuoteDateKnowsItsPersistableFormatForSaturday() {
         HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160528_1212HRS);
-        assertEquals(20160527l, historicalQuoteDate.persistable());
+        assertEquals("20160527", historicalQuoteDate.persistable());
     }
 
     @Test
     public void testHistoricalQuoteDateKnowsItsPersistableFormatForSunday() {
         HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160529_0000HRS);
-        assertEquals(20160527l, historicalQuoteDate.persistable());
+        assertEquals("20160527", historicalQuoteDate.persistable());
     }
 
     @Test
     public void testHistoricalQuoteDateKnowsItsPersistableFormatForWeekdays() {
         HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160530_0000HRS);
-        assertEquals(20160530l, historicalQuoteDate.persistable());
+        assertEquals("20160530", historicalQuoteDate.persistable());
     }
 }
