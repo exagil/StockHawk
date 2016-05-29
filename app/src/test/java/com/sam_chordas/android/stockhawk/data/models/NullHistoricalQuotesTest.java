@@ -12,6 +12,6 @@ public class NullHistoricalQuotesTest {
 
     @Test
     public void testThatNullHistoricalQuotesShouldNotKnowHowToBeSorted() {
-        Assert.assertEquals(new NullHistoricalQuotes(), new NullHistoricalQuotes().sort());
+        Assert.assertNull(new NullHistoricalQuotes().sortedCollection());
     }
 }

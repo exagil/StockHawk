@@ -1,20 +1,14 @@
 package com.sam_chordas.android.stockhawk.data.models;
 
 import android.database.Cursor;
-import android.util.Log;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -44,26 +38,29 @@ public class HistoricalQuotesTest {
 
     @Test
     public void testThatHistoricalQuotesKnowHowToBeSortedByDateAscendingIfTheyAreUnsorted() {
-        HistoricalQuote thisHistoricalQuote = new HistoricalQuote("FB", new Date(1463899584953l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
-        HistoricalQuote thatHistoricalQuote = new HistoricalQuote("FB", new Date(1463899584940l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        HistoricalQuote thisHistoricalQuote = new HistoricalQuote("FB", new Date(1464498687000l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        HistoricalQuote thatHistoricalQuote = new HistoricalQuote("FB", new Date(1464603010000l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
         HistoricalQuotes historicalQuotes = new HistoricalQuotes(thatHistoricalQuote, thisHistoricalQuote);
-        HistoricalQuotes expectedHistoricalQuotes = new HistoricalQuotes(thisHistoricalQuote, thatHistoricalQuote);
-        assertEquals(expectedHistoricalQuotes, historicalQuotes.sort());
+        List<HistoricalQuote> expectedHistoricalQuotes = new ArrayList<>();
+        expectedHistoricalQuotes.add(thisHistoricalQuote);
+        expectedHistoricalQuotes.add(thatHistoricalQuote);
+        assertEquals(expectedHistoricalQuotes, historicalQuotes.sortedCollection());
     }
 
     @Test
     public void testThatHistoricalQuotesKnowHowToNotBeSortedByDateAscendingIfTheyAreSortedAlready() {
-        HistoricalQuote thisHistoricalQuote = new HistoricalQuote("FB", new Date(1463899584953l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
-        HistoricalQuote thatHistoricalQuote = new HistoricalQuote("FB", new Date(1463899584940l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        HistoricalQuote thisHistoricalQuote = new HistoricalQuote("FB", new Date(1464498687000l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        HistoricalQuote thatHistoricalQuote = new HistoricalQuote("FB", new Date(1464603010000l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
         HistoricalQuotes historicalQuotes = new HistoricalQuotes(thisHistoricalQuote, thatHistoricalQuote);
-        HistoricalQuotes expectedHistoricalQuotes = new HistoricalQuotes(thisHistoricalQuote, thatHistoricalQuote);
-        assertEquals(expectedHistoricalQuotes, historicalQuotes.sort());
+        List<HistoricalQuote> expectedHistoricalQuotes = new ArrayList<>();
+        expectedHistoricalQuotes.add(thisHistoricalQuote);
+        expectedHistoricalQuotes.add(thatHistoricalQuote);
+        assertEquals(expectedHistoricalQuotes, historicalQuotes.sortedCollection());
     }
 
     @Test
     public void testThatHistoricalQuotesAreNotSortedIfTheyAreEmpty() {
         HistoricalQuotes historicalQuotes = new HistoricalQuotes();
-        HistoricalQuotes expectedHistoricalQuotes = new HistoricalQuotes();
-        assertEquals(expectedHistoricalQuotes, historicalQuotes.sort());
+        assertEquals(new ArrayList<HistoricalQuote>(), historicalQuotes.sortedCollection());
     }
 }

@@ -36,9 +36,10 @@ public class StockService {
                 @Override
                 public void onResponse(Call<HistoricalQuotesResponse> call, Response<HistoricalQuotesResponse> response) {
                     try {
-                        List<HistoricalQuote> historicalQuotes = response.body().toHistoricalQuotes();
-                        stockProviderService.insertHistoricalQuotes(new HistoricalQuotes(historicalQuotes));
-                        callback.onHistoricalQuotesLoaded(historicalQuotes);
+                        List<HistoricalQuote> historicalQuotesList = response.body().toHistoricalQuotes();
+                        HistoricalQuotes historicalQuotes = new HistoricalQuotes(historicalQuotesList);
+                        stockProviderService.insertHistoricalQuotes(historicalQuotes);
+                        callback.onHistoricalQuotesLoaded(historicalQuotes.sortedCollection());
                     } catch (Exception e) {
                         onFailure(call, e);
                     }

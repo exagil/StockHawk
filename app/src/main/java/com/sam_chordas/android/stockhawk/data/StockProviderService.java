@@ -41,10 +41,12 @@ public class StockProviderService implements Loader.OnLoadCompleteListener<Curso
         if (loader.getId() == ID_LOAD_QUOTE_SYMBOL) {
             if (!data.moveToFirst()) {
                 quoteSymbolLoaderCallback.onQuoteSymbolLoadFailed();
+                data.close();
                 return;
             }
             String symbol = data.getString(data.getColumnIndex(QuoteColumns.SYMBOL));
             quoteSymbolLoaderCallback.onQuoteSymbolLoaded(symbol);
+            data.close();
         }
     }
 

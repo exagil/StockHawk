@@ -34,6 +34,7 @@ public class HistoricalQuotes {
         historyCursor.moveToFirst();
         for (int index = 0; index < historyCursor.getCount(); index++, historyCursor.moveToNext())
             historicalQuotes.add(HistoricalQuote.fromCursor(historyCursor));
+        historyCursor.close();
         return historicalQuotes;
     }
 
@@ -68,9 +69,9 @@ public class HistoricalQuotes {
         return collection.isEmpty();
     }
 
-    public HistoricalQuotes sort() {
+    public List<HistoricalQuote> sortedCollection() {
         ArrayList<HistoricalQuote> historicalQuotes = new ArrayList<>(collection);
         Collections.sort(historicalQuotes);
-        return new HistoricalQuotes(historicalQuotes);
+        return historicalQuotes;
     }
 }

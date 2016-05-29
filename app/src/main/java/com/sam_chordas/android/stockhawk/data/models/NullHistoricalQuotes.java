@@ -25,7 +25,7 @@ public class NullHistoricalQuotes extends HistoricalQuotes {
     }
 
     @Override
-    public HistoricalQuotes sort() {
-        return new NullHistoricalQuotes();
+    public List<HistoricalQuote> sortedCollection() {
+        return null;
     }
 }

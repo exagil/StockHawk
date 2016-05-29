@@ -73,6 +73,10 @@ public class StockDetailPresenterTest {
     public void shouldLoadHistoricalQuotesWhenFetchedThemSuccessfully() throws ParseException {
         when(stockProviderService.loadHistoricalQuotesFor("YHOO")).thenReturn(new NullHistoricalQuotes());
         final List<HistoricalQuote> historicalQuotes = new ArrayList<>();
+        HistoricalQuote thisHistoricalQuote = new HistoricalQuote("FB", new Date(1464498687000l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        HistoricalQuote thatHistoricalQuote = new HistoricalQuote("FB", new Date(1464603010000l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        historicalQuotes.add(thatHistoricalQuote);
+        historicalQuotes.add(thisHistoricalQuote);
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
