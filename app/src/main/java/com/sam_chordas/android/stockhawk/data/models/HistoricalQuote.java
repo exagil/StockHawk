@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class HistoricalQuote implements Comparable<HistoricalQuote> {
-    public static final SimpleDateFormat PERSISTABLE_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
     public String symbol;
     public Date date;
     public Double open;
@@ -19,6 +18,7 @@ public class HistoricalQuote implements Comparable<HistoricalQuote> {
     public Double close;
     public Double volume;
     public Double adjClose;
+    private static final SimpleDateFormat PERSISTABLE_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
 
     public HistoricalQuote(String symbol, Date date, Double open, Double high, Double low, Double close, Double volume, Double adjClose) {
         this.symbol = symbol;
@@ -42,12 +42,12 @@ public class HistoricalQuote implements Comparable<HistoricalQuote> {
         HistoricalQuote that = (HistoricalQuote) o;
         return this.symbol.equals(that.symbol) &&
                 persistableDate(this.date) == persistableDate(that.date) &&
-                this.open.equals(that.open) &&
-                this.high.equals(that.high) &&
-                this.low.equals(that.low) &&
-                this.close.equals(that.close) &&
-                this.volume.equals(that.volume) &&
-                this.adjClose.equals(that.adjClose);
+                this.open.floatValue() == that.open.floatValue() &&
+                this.high.floatValue() == that.high.floatValue() &&
+                this.low.floatValue() == that.low.floatValue() &&
+                this.close.floatValue() == that.close.floatValue() &&
+                this.volume.floatValue() == that.volume.floatValue() &&
+                this.adjClose.floatValue() == that.adjClose.floatValue();
     }
 
     @Override

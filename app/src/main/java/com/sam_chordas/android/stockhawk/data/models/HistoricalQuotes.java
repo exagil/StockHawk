@@ -52,7 +52,6 @@ public class HistoricalQuotes {
         HistoricalQuotes that = (HistoricalQuotes) o;
 
         return collection != null ? collection.equals(that.collection) : that.collection == null;
-
     }
 
     @Override

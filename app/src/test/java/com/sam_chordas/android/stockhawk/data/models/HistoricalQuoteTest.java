@@ -16,6 +16,7 @@ public class HistoricalQuoteTest {
     public static final long MILLISECONDS_UNTIL_20160528_1212HRS = 1464437520000l;
     public static final long MILLISECONDS_UNTIL_20160627_1010HRS = 1464343810000l;
     public static final long MILLISECONDS_UNTIL_20160525_1010HRS = 1464171000000l;
+    public static final long MILLISECONDS_UNTIL_20160530_0400HRS = 1464580800000l;
 
     @Test
     public void shouldBeEqualToItself() {
@@ -196,6 +197,13 @@ public class HistoricalQuoteTest {
     @Test
     public void testThatHistoricalQuoteKnowsThatItIsNotFreshWhenItHasADifferentDateFromTheDateItIsComparedWith() {
         HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160529_1010HRS);
+        HistoricalQuote historicalQuote = new HistoricalQuote("FB", new Date(1467108610000l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        assertFalse(historicalQuote.isFresh(historicalQuoteDate));
+    }
+
+    @Test
+    public void testThatHistoricalQuoteOfLastWeekShouldNotBeFreshNextWeek() {
+        HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160530_0400HRS);
         HistoricalQuote historicalQuote = new HistoricalQuote("FB", new Date(1467108610000l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
         assertFalse(historicalQuote.isFresh(historicalQuoteDate));
     }

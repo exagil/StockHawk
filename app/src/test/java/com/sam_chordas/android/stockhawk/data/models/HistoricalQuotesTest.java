@@ -19,6 +19,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class HistoricalQuotesTest {
+    public static final long MILLISECONDS_UNTIL_20160530_0400HRS = 1464580800000l;
+
     @Test
     public void testThatHistoricalQuotesShouldNotBeEmptyIfConsistOfHistoricalQuote() {
         HistoricalQuote historicalQuote = new HistoricalQuote("historical_quote", new Date(System.currentTimeMillis()), new Double(1), new Double(1), new Double(2), new Double(4), new Double(1), new Double(9));
@@ -81,6 +83,16 @@ public class HistoricalQuotesTest {
     public void testThatHistoricalQuotesKnowIfTheyAreNotFresh() throws ParseException {
         HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(1464516610000l);
         InputStreamReader historicalQuotesReader = new InputStreamReader(HistoricalQuoteResponse.class.getClassLoader().getResourceAsStream("historical_quotes_fb_20160429_20160526.json"));
+        HistoricalQuotesResponse historicalQuotesResponse = new Gson().fromJson(historicalQuotesReader, HistoricalQuotesResponse.class);
+        final List<HistoricalQuote> historicalQuoteList = historicalQuotesResponse.toHistoricalQuotes();
+        HistoricalQuotes historicalQuotes = new HistoricalQuotes(historicalQuoteList);
+        assertFalse(historicalQuotes.areFresh(historicalQuoteDate));
+    }
+
+    @Test
+    public void testThatHistoricalQuoteOfLastWeekShouldNotBeFreshThisWeek() throws ParseException {
+        HistoricalQuoteDate historicalQuoteDate = HistoricalQuoteDate.fromMilliseconds(MILLISECONDS_UNTIL_20160530_0400HRS);
+        InputStreamReader historicalQuotesReader = new InputStreamReader(HistoricalQuoteResponse.class.getClassLoader().getResourceAsStream("historical_quotes_fb_20160429_20160527.json"));
         HistoricalQuotesResponse historicalQuotesResponse = new Gson().fromJson(historicalQuotesReader, HistoricalQuotesResponse.class);
         final List<HistoricalQuote> historicalQuoteList = historicalQuotesResponse.toHistoricalQuotes();
         HistoricalQuotes historicalQuotes = new HistoricalQuotes(historicalQuoteList);
