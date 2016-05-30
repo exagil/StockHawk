@@ -1,6 +1,7 @@
 package com.sam_chordas.android.stockhawk.data.models;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.support.annotation.NonNull;
 
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
@@ -69,6 +70,18 @@ public class Quote {
         Double bidPrice = contentValues.getAsDouble(QuoteColumns.BIDPRICE);
         Integer isUpPersistableBoolean = contentValues.getAsInteger(QuoteColumns.ISUP);
         Integer isCurrentPersistableBoolean = contentValues.getAsInteger(QuoteColumns.ISCURRENT);
+        PersistableBoolean isUp = PersistableBoolean.parse(isUpPersistableBoolean);
+        PersistableBoolean isCurrent = PersistableBoolean.parse(isCurrentPersistableBoolean);
+        return new Quote(symbol, percentChange, change, bidPrice, isUp, isCurrent);
+    }
+
+    public static Quote fromCursor(@NonNull Cursor quoteCursor) {
+        String symbol = quoteCursor.getString(quoteCursor.getColumnIndex(QuoteColumns.SYMBOL));
+        Float percentChange = quoteCursor.getFloat(quoteCursor.getColumnIndex(QuoteColumns.PERCENT_CHANGE));
+        Float change = quoteCursor.getFloat(quoteCursor.getColumnIndex(QuoteColumns.CHANGE));
+        Double bidPrice = quoteCursor.getDouble(quoteCursor.getColumnIndex(QuoteColumns.BIDPRICE));
+        Integer isUpPersistableBoolean = quoteCursor.getInt(quoteCursor.getColumnIndex(QuoteColumns.ISUP));
+        Integer isCurrentPersistableBoolean = quoteCursor.getInt(quoteCursor.getColumnIndex(QuoteColumns.ISCURRENT));
         PersistableBoolean isUp = PersistableBoolean.parse(isUpPersistableBoolean);
         PersistableBoolean isCurrent = PersistableBoolean.parse(isCurrentPersistableBoolean);
         return new Quote(symbol, percentChange, change, bidPrice, isUp, isCurrent);

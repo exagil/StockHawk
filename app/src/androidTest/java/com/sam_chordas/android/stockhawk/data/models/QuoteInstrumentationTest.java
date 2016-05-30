@@ -1,13 +1,28 @@
 package com.sam_chordas.android.stockhawk.data.models;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
 import android.test.AndroidTestCase;
 
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
+import com.sam_chordas.android.stockhawk.data.generated.QuoteProvider;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 public class QuoteInstrumentationTest extends AndroidTestCase {
+    @Before
+    public void setup() {
+        resetDatabase();
+    }
+
+    @After
+    public void tearDown() {
+        resetDatabase();
+    }
+
     @Test
     public void testThatQuoteKnowsItsCorrespondingContentValues() {
         Quote quote = new Quote("FB", 1.23f, 4.56f, 9.99d, PersistableBoolean.TRUE, PersistableBoolean.FALSE);
@@ -32,5 +47,19 @@ public class QuoteInstrumentationTest extends AndroidTestCase {
         quoteContentValues.put(QuoteColumns.ISUP, 1);
         quoteContentValues.put(QuoteColumns.ISCURRENT, 0);
         assertEquals(quote, Quote.fromContentValues(quoteContentValues));
+    }
+
+    @Test
+    public void testThatQuoteKnowsHowToBuildItselfFromCursor() {
+        Quote expectedQuote = new Quote("FB", 1.23f, 4.56f, 9.99d, PersistableBoolean.TRUE, PersistableBoolean.FALSE);
+        getContext().getContentResolver().insert(QuoteProvider.Quotes.CONTENT_URI, expectedQuote.toContentValues());
+        Cursor quoteCursor = getContext().getContentResolver().query(QuoteProvider.Quotes.CONTENT_URI, null, QuoteColumns.SYMBOL + "=?", new String[]{"FB"}, null);
+        quoteCursor.moveToFirst();
+        assertEquals(expectedQuote, Quote.fromCursor(quoteCursor));
+    }
+
+    private void resetDatabase() {
+        getContext().deleteDatabase("quoteDatabase.db");
+        getContext().openOrCreateDatabase("quoteDatabase.db", Context.MODE_PRIVATE, null);
     }
 }
