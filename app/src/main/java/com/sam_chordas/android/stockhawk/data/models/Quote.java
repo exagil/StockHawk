@@ -1,27 +1,23 @@
 package com.sam_chordas.android.stockhawk.data.models;
 
 import android.content.ContentValues;
+import android.support.annotation.NonNull;
 
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
-
-import java.util.Date;
-import java.util.StringTokenizer;
 
 public class Quote {
     private final String symbol;
     private final Float percentChange;
     private final Float change;
     private final Double bidPrice;
-    private final Date createdAt;
-    private final boolean isUp;
-    private final boolean isCurrent;
+    private final PersistableBoolean isUp;
+    private final PersistableBoolean isCurrent;
 
-    public Quote(String symbol, Float percentChange, Float change, Double bidPrice, Date createdAt, boolean isUp, boolean isCurrent) {
+    public Quote(@NonNull String symbol, @NonNull Float percentChange, @NonNull Float change, @NonNull Double bidPrice, @NonNull PersistableBoolean isUp, @NonNull PersistableBoolean isCurrent) {
         this.symbol = symbol;
         this.percentChange = percentChange;
         this.change = change;
         this.bidPrice = bidPrice;
-        this.createdAt = createdAt;
         this.isUp = isUp;
         this.isCurrent = isCurrent;
     }
@@ -33,15 +29,14 @@ public class Quote {
 
         Quote quote = (Quote) o;
 
-        if (isUp != quote.isUp) return false;
-        if (isCurrent != quote.isCurrent) return false;
         if (symbol != null ? !symbol.equals(quote.symbol) : quote.symbol != null) return false;
         if (percentChange != null ? !percentChange.equals(quote.percentChange) : quote.percentChange != null)
             return false;
         if (change != null ? !change.equals(quote.change) : quote.change != null) return false;
         if (bidPrice != null ? !bidPrice.equals(quote.bidPrice) : quote.bidPrice != null)
             return false;
-        return createdAt != null ? createdAt.equals(quote.createdAt) : quote.createdAt == null;
+        if (isUp != quote.isUp) return false;
+        return isCurrent == quote.isCurrent;
 
     }
 
@@ -51,9 +46,8 @@ public class Quote {
         result = 31 * result + (percentChange != null ? percentChange.hashCode() : 0);
         result = 31 * result + (change != null ? change.hashCode() : 0);
         result = 31 * result + (bidPrice != null ? bidPrice.hashCode() : 0);
-        result = 31 * result + (createdAt != null ? createdAt.hashCode() : 0);
-        result = 31 * result + (isUp ? 1 : 0);
-        result = 31 * result + (isCurrent ? 1 : 0);
+        result = 31 * result + (isUp != null ? isUp.hashCode() : 0);
+        result = 31 * result + (isCurrent != null ? isCurrent.hashCode() : 0);
         return result;
     }
 
@@ -63,12 +57,20 @@ public class Quote {
         quoteContentValues.put(QuoteColumns.PERCENT_CHANGE, String.valueOf(this.percentChange));
         quoteContentValues.put(QuoteColumns.CHANGE, String.valueOf(this.change));
         quoteContentValues.put(QuoteColumns.BIDPRICE, String.valueOf(this.bidPrice));
-        quoteContentValues.put(QuoteColumns.ISUP, persistableBoolean(isUp));
-        quoteContentValues.put(QuoteColumns.ISCURRENT, persistableBoolean(isCurrent));
+        quoteContentValues.put(QuoteColumns.ISUP, isUp.value());
+        quoteContentValues.put(QuoteColumns.ISCURRENT, isCurrent.value());
         return quoteContentValues;
     }
 
-    private int persistableBoolean(boolean booleanField) {
-        return booleanField == true ? 1 : 0;
+    public static Quote fromContentValues(ContentValues contentValues) {
+        String symbol = contentValues.getAsString(QuoteColumns.SYMBOL);
+        Float percentChange = contentValues.getAsFloat(QuoteColumns.PERCENT_CHANGE);
+        Float change = contentValues.getAsFloat(QuoteColumns.CHANGE);
+        Double bidPrice = contentValues.getAsDouble(QuoteColumns.BIDPRICE);
+        Integer isUpPersistableBoolean = contentValues.getAsInteger(QuoteColumns.ISUP);
+        Integer isCurrentPersistableBoolean = contentValues.getAsInteger(QuoteColumns.ISCURRENT);
+        PersistableBoolean isUp = PersistableBoolean.parse(isUpPersistableBoolean);
+        PersistableBoolean isCurrent = PersistableBoolean.parse(isCurrentPersistableBoolean);
+        return new Quote(symbol, percentChange, change, bidPrice, isUp, isCurrent);
     }
 }
