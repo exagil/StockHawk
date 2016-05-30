@@ -22,6 +22,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -35,6 +36,7 @@ import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.generated.QuoteProvider;
 import com.sam_chordas.android.stockhawk.rest.QuoteCursorAdapter;
 import com.sam_chordas.android.stockhawk.rest.RecyclerViewItemClickListener;
+import com.sam_chordas.android.stockhawk.utils.NetworkUtils;
 import com.sam_chordas.android.stockhawk.utils.Utils;
 import com.sam_chordas.android.stockhawk.service.StockIntentService;
 import com.sam_chordas.android.stockhawk.service.StockTaskService;
@@ -64,7 +66,10 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
     @Inject
     public SharedPreferences stockHawkPreferences;
+    @Inject
+    public NetworkUtils networkUtils;
     private CoordinatorLayout rootLayout;
+    private TextView textError;
 
     @Override
     public void onResume() {
@@ -86,6 +91,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                 activeNetwork.isConnectedOrConnecting();
         setContentView(R.layout.activity_my_stocks);
         rootLayout = (CoordinatorLayout) findViewById(R.id.root_activity_my_stocks);
+        textError = (TextView) findViewById(R.id.text_error);
         // The intent service is for executing immediate pulls from the Yahoo API
         // GCMTaskService can only schedule tasks, they cannot execute immediately
         mServiceIntent = new Intent(this, StockIntentService.class);
@@ -179,6 +185,7 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
             // are updated.
             GcmNetworkManager.getInstance(this).schedule(periodicTask);
         }
+        hideError();
     }
 
     public void networkToast() {
@@ -233,6 +240,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (data.getCount() == 0 & networkUtils.isNotConnectedToInternet())
+            showNetworkError();
         mCursorAdapter.swapCursor(data);
         mCursor = data;
     }
@@ -267,5 +276,14 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     protected void onStop() {
         stockHawkPreferences.unregisterOnSharedPreferenceChangeListener(this);
         super.onStop();
+    }
+
+    private void showNetworkError() {
+        textError.setText(R.string.no_internet_connection);
+        textError.setVisibility(TextView.VISIBLE);
+    }
+
+    private void hideError() {
+        textError.setVisibility(TextView.INVISIBLE);
     }
 }
