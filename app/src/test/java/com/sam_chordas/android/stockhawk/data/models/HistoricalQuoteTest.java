@@ -207,4 +207,10 @@ public class HistoricalQuoteTest {
         HistoricalQuote historicalQuote = new HistoricalQuote("FB", new Date(1467108610000l), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
         assertFalse(historicalQuote.isFresh(historicalQuoteDate));
     }
+
+    @Test
+    public void testThatHistoricalQuoteKnowsItsCorrespondingPlottableDate() {
+        HistoricalQuote historicalQuote = new HistoricalQuote("FB", new Date(MILLISECONDS_UNTIL_20160530_0400HRS), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3), new Double(2.3));
+        assertEquals("30", historicalQuote.plottableDate());
+    }
 }

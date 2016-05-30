@@ -19,6 +19,7 @@ public class HistoricalQuote implements Comparable<HistoricalQuote> {
     public Double volume;
     public Double adjClose;
     private static final SimpleDateFormat PERSISTABLE_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
+    private static final SimpleDateFormat PLOTTABLE_DATE_FORMAT = new SimpleDateFormat("dd");
 
     public HistoricalQuote(String symbol, Date date, Double open, Double high, Double low, Double close, Double volume, Double adjClose) {
         this.symbol = symbol;
@@ -87,6 +88,10 @@ public class HistoricalQuote implements Comparable<HistoricalQuote> {
         String adjClose = cursor.getString(cursor.getColumnIndex(HistoryColumns.ADJ_CLOSE));
         return new HistoricalQuote(symbol, PERSISTABLE_DATE_FORMAT.parse(date), new Double(open), new Double(high),
                 new Double(low), new Double(close), new Double(volume), new Double(adjClose));
+    }
+
+    public String plottableDate() {
+        return PLOTTABLE_DATE_FORMAT.format(date);
     }
 
     private long persistableDate(Date date) {
