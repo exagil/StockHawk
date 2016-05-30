@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 
 public class Quote {
-    private final String symbol;
+    public final String symbol;
     private final Float percentChange;
     private final Float change;
     private final Double bidPrice;

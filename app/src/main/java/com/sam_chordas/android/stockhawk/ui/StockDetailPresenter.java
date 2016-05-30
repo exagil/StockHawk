@@ -7,6 +7,7 @@ import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuoteDate;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotes;
 import com.sam_chordas.android.stockhawk.data.models.NetworkError;
+import com.sam_chordas.android.stockhawk.data.models.Quote;
 
 import java.text.ParseException;
 import java.util.List;
@@ -24,22 +25,22 @@ public class StockDetailPresenter {
 
     public void loadQuoteSymbolForQuoteId(long quoteId) {
         stockDetailView.beforeLoad();
-        stockProviderService.loadQuoteSymbolForQuoteId(quoteId, new StockProviderService.QuoteSymbolLoaderCallback() {
+        stockProviderService.loadQuoteWithId(quoteId, new StockProviderService.QuoteLoaderCallback() {
             @Override
-            public void onQuoteSymbolLoaded(String quoteSymbol) {
+            public void onQuoteLoaded(Quote quote) {
                 // TODO: 25/05/16 Chirag - Not a good idea to handle exception here
                 try {
                     stockDetailView.afterLoad();
-                    stockDetailView.onSymbolLoaded(quoteSymbol);
+                    stockDetailView.onQuoteLoaded(quote);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }
 
             @Override
-            public void onQuoteSymbolLoadFailed() {
+            public void onQuoteLoadFailed() {
                 stockDetailView.afterLoad();
-                stockDetailView.onSymbolLoadFailed();
+                stockDetailView.onQuoteLoadFailed();
             }
         });
     }

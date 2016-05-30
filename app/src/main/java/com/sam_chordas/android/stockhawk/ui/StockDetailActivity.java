@@ -16,6 +16,7 @@ import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.StockProviderService;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuoteDate;
+import com.sam_chordas.android.stockhawk.data.models.Quote;
 
 import java.text.ParseException;
 import java.util.List;
@@ -63,12 +64,12 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
     }
 
     @Override
-    public void onSymbolLoaded(String stockSymbol) throws ParseException {
-        stockDetailPresenter.loadOneMonthsHistoricalQuotes(stockSymbol, HistoricalQuoteDate.fromMilliseconds(System.currentTimeMillis()));
+    public void onQuoteLoaded(Quote quote) throws ParseException {
+        stockDetailPresenter.loadOneMonthsHistoricalQuotes(quote.symbol, HistoricalQuoteDate.fromMilliseconds(System.currentTimeMillis()));
     }
 
     @Override
-    public void onSymbolLoadFailed() {
+    public void onQuoteLoadFailed() {
     }
 
     @Override

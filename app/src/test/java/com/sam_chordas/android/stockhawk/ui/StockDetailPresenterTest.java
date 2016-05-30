@@ -11,6 +11,8 @@ import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotes;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotesResponse;
 import com.sam_chordas.android.stockhawk.data.models.NetworkError;
 import com.sam_chordas.android.stockhawk.data.models.NullHistoricalQuotes;
+import com.sam_chordas.android.stockhawk.data.models.PersistableBoolean;
+import com.sam_chordas.android.stockhawk.data.models.Quote;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -46,16 +48,17 @@ public class StockDetailPresenterTest {
 
     @Test
     public void shouldKnowHowToLoadStockSymbolForAParticularQuote() throws ParseException {
+        final Quote quote = new Quote("FB", 1.23f, 4.56f, 9.99d, PersistableBoolean.TRUE, PersistableBoolean.FALSE);
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                StockProviderService.QuoteSymbolLoaderCallback callback = (StockProviderService.QuoteSymbolLoaderCallback) invocation.getArguments()[1];
-                callback.onQuoteSymbolLoaded("YHOO");
+                StockProviderService.QuoteLoaderCallback callback = (StockProviderService.QuoteLoaderCallback) invocation.getArguments()[1];
+                callback.onQuoteLoaded(quote);
                 return null;
             }
-        }).when(stockProviderService).loadQuoteSymbolForQuoteId(anyInt(), Matchers.<StockProviderService.QuoteSymbolLoaderCallback>any());
+        }).when(stockProviderService).loadQuoteWithId(anyInt(), Matchers.<StockProviderService.QuoteLoaderCallback>any());
         stockDetailPresenter.loadQuoteSymbolForQuoteId(1);
-        verify(stockDetailView).onSymbolLoaded("YHOO");
+        verify(stockDetailView).onQuoteLoaded(quote);
     }
 
     @Test
@@ -63,13 +66,13 @@ public class StockDetailPresenterTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                StockProviderService.QuoteSymbolLoaderCallback callback = (StockProviderService.QuoteSymbolLoaderCallback) invocation.getArguments()[1];
-                callback.onQuoteSymbolLoadFailed();
+                StockProviderService.QuoteLoaderCallback callback = (StockProviderService.QuoteLoaderCallback) invocation.getArguments()[1];
+                callback.onQuoteLoadFailed();
                 return null;
             }
-        }).when(stockProviderService).loadQuoteSymbolForQuoteId(anyInt(), Matchers.<StockProviderService.QuoteSymbolLoaderCallback>any());
+        }).when(stockProviderService).loadQuoteWithId(anyInt(), Matchers.<StockProviderService.QuoteLoaderCallback>any());
         stockDetailPresenter.loadQuoteSymbolForQuoteId(1);
-        verify(stockDetailView).onSymbolLoadFailed();
+        verify(stockDetailView).onQuoteLoadFailed();
     }
 
     @Test
