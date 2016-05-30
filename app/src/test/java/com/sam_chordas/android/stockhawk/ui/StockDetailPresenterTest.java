@@ -93,7 +93,6 @@ public class StockDetailPresenterTest {
         stockDetailPresenter.loadOneMonthsHistoricalQuotes("FB", historicalQuoteDate);
         verify(stockDetailView).onOneMonthsHistoricalQuotesLoaded(historicalQuoteList);
         verify(stockDetailView).beforeLoad();
-        verify(stockDetailView).afterLoad();
         verifyNoMoreInteractions(stockDetailView);
     }
 
@@ -128,7 +127,6 @@ public class StockDetailPresenterTest {
         stockDetailPresenter.loadOneMonthsHistoricalQuotes("FB", historicalQuoteDate);
         verify(stockDetailView).onOneMonthsHistoricalQuotesLoaded(historicalQuoteList);
         verify(stockDetailView).beforeLoad();
-        verify(stockDetailView).afterLoad();
         verifyNoMoreInteractions(stockService);
         verifyNoMoreInteractions(stockDetailView);
     }
@@ -156,7 +154,6 @@ public class StockDetailPresenterTest {
         stockDetailPresenter.loadOneMonthsHistoricalQuotes("FB", historicalQuoteDate);
         verify(stockDetailView).onOneMonthsHistoricalQuotesLoaded(newHistoricalQuoteList);
         verify(stockDetailView).beforeLoad();
-        verify(stockDetailView).afterLoad();
         verifyNoMoreInteractions(stockDetailView);
     }
 }

@@ -6,8 +6,15 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.LimitLine;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.pnikosis.materialishprogress.ProgressWheel;
-import com.robinhood.spark.SparkView;
 import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.StockDetailView;
 import com.sam_chordas.android.stockhawk.StockHawkApp;
@@ -19,6 +26,7 @@ import com.sam_chordas.android.stockhawk.data.models.HistoricalQuoteDate;
 import com.sam_chordas.android.stockhawk.data.models.Quote;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -32,9 +40,8 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
     public StockService stockService;
 
     private StockDetailPresenter stockDetailPresenter;
-    private StockGraphAdapter stockGraphAdapter;
     private TextView textError;
-    private SparkView sparkGraphView;
+    private LineChart graphHistory;
     private ProgressWheel progressWheel;
 
     @Override
@@ -45,11 +52,9 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
         stockDetailPresenter = new StockDetailPresenter(this, stockProviderService, stockService);
         setTitle(R.string.stock_detail);
         long quoteId = getIntent().getLongExtra(QuoteColumns._ID, 0);
-        sparkGraphView = (SparkView) findViewById(R.id.sparkview);
+        graphHistory = (LineChart) findViewById(R.id.graph_history);
         progressWheel = (ProgressWheel) findViewById(R.id.progress_wheel);
         textError = (TextView) findViewById(R.id.text_error);
-        stockGraphAdapter = new StockGraphAdapter(null);
-        sparkGraphView.setAdapter(stockGraphAdapter);
         stockDetailPresenter.loadQuoteSymbolForQuoteId(quoteId);
     }
 
@@ -74,15 +79,40 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
 
     @Override
     public void onOneMonthsHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes) {
-        sparkGraphView.setVisibility(SparkView.VISIBLE);
-        textError.setVisibility(TextView.GONE);
-        stockGraphAdapter.populate(historicalQuotes);
+        XAxis xAxis = graphHistory.getXAxis();
+        LimitLine dateLimitLine = new LimitLine(140f, "Date");
+        xAxis.addLimitLine(dateLimitLine);
+        YAxis yAxis = graphHistory.getAxisLeft();
+        LimitLine historyLimitLine = new LimitLine(140f, "Stock History");
+        yAxis.addLimitLine(historyLimitLine);
+
+        List<Entry> stockHistoryEntries = new ArrayList<>();
+        List<String> stockDateDataSet = new ArrayList<>();
+        for (int historicalQuoteIndex = 0; historicalQuoteIndex < historicalQuotes.size(); historicalQuoteIndex++) {
+            HistoricalQuote historicalQuote = historicalQuotes.get(historicalQuoteIndex);
+            Entry stockHistoryEntry = new Entry(historicalQuote.dayHigh(), historicalQuoteIndex);
+            stockDateDataSet.add(historicalQuote.plottableDate());
+            stockHistoryEntries.add(stockHistoryEntry);
+        }
+        LineDataSet stockHistoryDataSet = new LineDataSet(stockHistoryEntries, "Stock History");
+        stockHistoryDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        ArrayList<ILineDataSet> stockHistoryDataSetCollection = new ArrayList<>();
+        stockHistoryDataSetCollection.add(stockHistoryDataSet);
+        LineData finalData = new LineData(stockDateDataSet, stockHistoryDataSetCollection);
+        graphHistory.setData(finalData);
+        graphHistory.invalidate();
+        afterLoad();
+        toggleGraphVisibility(LineChart.VISIBLE, TextView.GONE);
     }
 
     @Override
     public void onOneMonthsHistoricalQuotesLoadFailure(String error) {
-        sparkGraphView.setVisibility(SparkView.GONE);
-        textError.setVisibility(TextView.VISIBLE);
+        toggleGraphVisibility(LineChart.GONE, TextView.VISIBLE);
         textError.setText(error);
+    }
+
+    private void toggleGraphVisibility(int graphVisibility, int textErrorVisibility) {
+        graphHistory.setVisibility(graphVisibility);
+        textError.setVisibility(textErrorVisibility);
     }
 }

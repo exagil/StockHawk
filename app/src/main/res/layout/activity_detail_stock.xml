@@ -7,13 +7,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.robinhood.spark.SparkView
-        android:id="@+id/sparkview"
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/graph_history"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="16dp"
         android:paddingTop="16dp"
-        app:spark_lineColor="@color/md_material_blue_600" />
+        android:visibility="invisible" />
 
     <com.pnikosis.materialishprogress.ProgressWheel
         android:id="@+id/progress_wheel"

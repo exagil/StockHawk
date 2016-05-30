@@ -49,13 +49,11 @@ public class StockDetailPresenter {
         stockDetailView.beforeLoad();
         HistoricalQuotes historicalQuotes = stockProviderService.loadOneMonthsHistoricalQuotes(stockSymbol, historicalQuoteDate);
         if (!historicalQuotes.isEmpty() && historicalQuotes.areFresh(historicalQuoteDate)) {
-            stockDetailView.afterLoad();
             stockDetailView.onOneMonthsHistoricalQuotesLoaded(historicalQuotes.collection);
             return;
         }
         stockService.loadOneMonthsHistoricalQuotes(stockSymbol, historicalQuoteDate, new StockService.HistoricalQuotesCallback() {
             public void onHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes) {
-                stockDetailView.afterLoad();
                 stockDetailView.onOneMonthsHistoricalQuotesLoaded(historicalQuotes);
             }
 
