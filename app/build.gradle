@@ -46,10 +46,12 @@ dependencies {
     compile group: 'io.reactivex', name: 'rxandroid', version: '1.2.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.0'
-    compile 'com.android.support:support-annotations:23.0.1'
+    compile 'com.android.support:support-annotations:23.4.0'
     compile 'com.android.support:design:23.0.1'
     compile 'com.pnikosis:materialish-progress:1.7'
-    compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
+    compile('com.github.PhilJay:MPAndroidChart:v2.2.5') {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:1.+"
@@ -58,6 +60,6 @@ dependencies {
     androidTestCompile 'org.mockito:mockito-core:1.10.19'
     androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
-    androidTestCompile 'com.android.support:support-annotations:23.3.0'
+    androidTestCompile 'com.android.support:support-annotations:23.4.0'
     androidTestCompile 'com.android.support.test:runner:0.4.1'
 }
