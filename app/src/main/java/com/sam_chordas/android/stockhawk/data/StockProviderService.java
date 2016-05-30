@@ -10,6 +10,7 @@ import com.sam_chordas.android.stockhawk.data.generated.HistoryProvider;
 import com.sam_chordas.android.stockhawk.data.generated.QuoteProvider;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuoteDate;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotes;
+import com.sam_chordas.android.stockhawk.data.models.Quote;
 
 import java.text.ParseException;
 
@@ -18,17 +19,17 @@ import java.text.ParseException;
 public class StockProviderService implements Loader.OnLoadCompleteListener<Cursor> {
     public static final int ID_LOAD_QUOTE_SYMBOL = 1;
     private Context context;
-    private QuoteSymbolLoaderCallback quoteSymbolLoaderCallback;
+    private QuoteLoaderCallback quoteLoaderCallback;
     private CursorLoader cursorLoader;
 
     public StockProviderService(Context context) {
         this.context = context;
     }
 
-    public void loadQuoteSymbolForQuoteId(final long quoteId, @NonNull final QuoteSymbolLoaderCallback callback) {
-        this.quoteSymbolLoaderCallback = callback;
+    public void loadQuoteWithId(final long quoteId, @NonNull final QuoteLoaderCallback callback) {
+        this.quoteLoaderCallback = callback;
         this.cursorLoader = new CursorLoader(context, QuoteProvider.Quotes.CONTENT_URI,
-                new String[]{QuoteColumns.SYMBOL},
+                null,
                 "_id=?",
                 new String[]{String.valueOf(quoteId)},
                 null
@@ -41,12 +42,12 @@ public class StockProviderService implements Loader.OnLoadCompleteListener<Curso
     public void onLoadComplete(Loader<Cursor> loader, Cursor data) {
         if (loader.getId() == ID_LOAD_QUOTE_SYMBOL) {
             if (!data.moveToFirst()) {
-                quoteSymbolLoaderCallback.onQuoteSymbolLoadFailed();
+                quoteLoaderCallback.onQuoteLoadFailed();
                 data.close();
                 return;
             }
-            String symbol = data.getString(data.getColumnIndex(QuoteColumns.SYMBOL));
-            quoteSymbolLoaderCallback.onQuoteSymbolLoaded(symbol);
+            Quote quote = Quote.fromCursor(data);
+            quoteLoaderCallback.onQuoteLoaded(quote);
             data.close();
         }
     }
@@ -61,9 +62,9 @@ public class StockProviderService implements Loader.OnLoadCompleteListener<Curso
         return HistoricalQuotes.fromCursor(historicalQuotesCursor);
     }
 
-    public interface QuoteSymbolLoaderCallback {
-        void onQuoteSymbolLoaded(String quoteSymbol);
+    public interface QuoteLoaderCallback {
+        void onQuoteLoaded(Quote quote);
 
-        void onQuoteSymbolLoadFailed();
+        void onQuoteLoadFailed();
     }
 }

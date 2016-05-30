@@ -14,6 +14,7 @@ import com.sam_chordas.android.stockhawk.data.models.HistoricalQuoteResponse;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotes;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotesResponse;
 import com.sam_chordas.android.stockhawk.data.models.NullHistoricalQuotes;
+import com.sam_chordas.android.stockhawk.data.models.Quote;
 
 import org.junit.After;
 import org.junit.Before;
@@ -25,7 +26,7 @@ import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
-import static com.sam_chordas.android.stockhawk.data.StockProviderService.QuoteSymbolLoaderCallback;
+import static com.sam_chordas.android.stockhawk.data.StockProviderService.QuoteLoaderCallback;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -46,17 +47,17 @@ public class StockProviderServiceInstrumentationTest extends AndroidTestCase {
     }
 
     @Test
-    public void shouldNotLoadQuoteNameForStockWhichDoesNotExistLocally() throws InterruptedException {
+    public void shouldNotLoadQuoteForStockWhichDoesNotExistLocally() throws InterruptedException {
         StockProviderService stockProviderService = new StockProviderService(getContext());
-        QuoteSymbolLoaderCallback quoteSymbolLoaderCallback = Mockito.mock(QuoteSymbolLoaderCallback.class);
-        stockProviderService.loadQuoteSymbolForQuoteId(1, quoteSymbolLoaderCallback);
+        QuoteLoaderCallback quoteLoaderCallback = Mockito.mock(QuoteLoaderCallback.class);
+        stockProviderService.loadQuoteWithId(1, quoteLoaderCallback);
         Thread.sleep(1000);
-        verify(quoteSymbolLoaderCallback).onQuoteSymbolLoadFailed();
-        verifyNoMoreInteractions(quoteSymbolLoaderCallback);
+        verify(quoteLoaderCallback).onQuoteLoadFailed();
+        verifyNoMoreInteractions(quoteLoaderCallback);
     }
 
     @Test
-    public void shouldLoadQuoteSymbolWhenCorrespondingQuoteExistsLocally() throws InterruptedException {
+    public void shouldLoadQuoteWhenExistsLocally() throws InterruptedException {
         StockProviderService stockProviderService = new StockProviderService(getContext());
         ContentValues quoteContentValues = new ContentValues();
         quoteContentValues.put(QuoteColumns.SYMBOL, "YHOO");
@@ -67,12 +68,12 @@ public class StockProviderServiceInstrumentationTest extends AndroidTestCase {
         quoteContentValues.put(QuoteColumns.ISUP, 1);
         quoteContentValues.put(QuoteColumns.ISCURRENT, 1);
         getContext().getContentResolver().insert(QuoteProvider.Quotes.CONTENT_URI, quoteContentValues);
-
-        QuoteSymbolLoaderCallback quoteSymbolLoaderCallback = Mockito.mock(QuoteSymbolLoaderCallback.class);
-        stockProviderService.loadQuoteSymbolForQuoteId(1, quoteSymbolLoaderCallback);
+        Quote quote = Quote.fromContentValues(quoteContentValues);
+        QuoteLoaderCallback quoteLoaderCallback = Mockito.mock(QuoteLoaderCallback.class);
+        stockProviderService.loadQuoteWithId(1, quoteLoaderCallback);
         Thread.sleep(1000);
-        verify(quoteSymbolLoaderCallback).onQuoteSymbolLoaded("YHOO");
-        verifyNoMoreInteractions(quoteSymbolLoaderCallback);
+        verify(quoteLoaderCallback).onQuoteLoaded(quote);
+        verifyNoMoreInteractions(quoteLoaderCallback);
     }
 
     @Test
