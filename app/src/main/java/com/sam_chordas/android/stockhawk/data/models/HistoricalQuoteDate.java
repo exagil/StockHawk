@@ -5,13 +5,14 @@ package com.sam_chordas.android.stockhawk.data.models;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class HistoricalQuoteDate {
     private static final long MILLISECONDS_IN_THIRTY_DAYS = 2592000000l;
     private static final long MILLISECONDS_IN_ONE_DAY = 86400000l;
     private final Date date;
-    private SimpleDateFormat QUERYABLE_HISTORICAL_QUOTE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-    private SimpleDateFormat PERSISTABLE_HISTORICAL_QUOTE_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
+    private SimpleDateFormat QUERYABLE_HISTORICAL_QUOTE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+    private SimpleDateFormat PERSISTABLE_HISTORICAL_QUOTE_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
     private long milliseconds;
 
     public static HistoricalQuoteDate fromMilliseconds(long milliseconds) {

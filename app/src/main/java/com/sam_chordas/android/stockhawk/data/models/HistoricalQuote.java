@@ -8,6 +8,7 @@ import com.sam_chordas.android.stockhawk.data.HistoryColumns;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class HistoricalQuote implements Comparable<HistoricalQuote> {
     public String symbol;
@@ -18,8 +19,8 @@ public class HistoricalQuote implements Comparable<HistoricalQuote> {
     public Double close;
     public Double volume;
     public Double adjClose;
-    private static final SimpleDateFormat PERSISTABLE_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd");
-    private static final SimpleDateFormat PLOTTABLE_DATE_FORMAT = new SimpleDateFormat("dd");
+    private static final SimpleDateFormat PERSISTABLE_DATE_FORMAT = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
+    private static final SimpleDateFormat PLOTTABLE_DATE_FORMAT = new SimpleDateFormat("dd", Locale.ENGLISH);
 
     public HistoricalQuote(String symbol, Date date, Double open, Double high, Double low, Double close, Double volume, Double adjClose) {
         this.symbol = symbol;

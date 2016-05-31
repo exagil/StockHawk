@@ -6,10 +6,11 @@ import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class HistoricalQuoteResponse {
     public static final String YYYY_MM_DD = "yyyy-MM-dd";
-    SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(YYYY_MM_DD);
+    SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(YYYY_MM_DD, Locale.ENGLISH);
 
     @SerializedName("Symbol")
     public String symbol;
