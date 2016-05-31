@@ -3,8 +3,13 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/material_blue_500</item>
-        <item name="colorPrimaryDark">@color/material_blue_700</item>
+        <item name="colorPrimaryDark">@color/md_material_blue_800</item>
         <!-- Customize your theme here. -->
+    </style>
+
+    <style name="theme_stock_detail" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/material_blue_600</item>
+        <item name="colorPrimaryDark">@color/md_material_blue_800</item>
     </style>
 
     <style name="PercentChangeTextStyle">
@@ -27,4 +32,6 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+
+    <color name="material_blue_900">#FF0A478E</color>
 </resources>

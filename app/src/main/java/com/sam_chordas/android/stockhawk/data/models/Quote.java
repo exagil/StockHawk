@@ -23,6 +23,14 @@ public class Quote {
         this.isCurrent = isCurrent;
     }
 
+    public String bidPrice() {
+        return String.valueOf(bidPrice);
+    }
+
+    public String change() {
+        return String.valueOf(change);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

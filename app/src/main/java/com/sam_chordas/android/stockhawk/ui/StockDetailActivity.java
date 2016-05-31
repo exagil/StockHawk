@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -43,6 +44,9 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
     private TextView textError;
     private LineChart graphHistory;
     private ProgressWheel progressWheel;
+    private TextView textSymbol;
+    private TextView textBidPrice;
+    private TextView textChange;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,10 +54,15 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
         setContentView(R.layout.activity_detail_stock);
         ((StockHawkApp) getApplication()).getStockHawkDependencies().inject(this);
         stockDetailPresenter = new StockDetailPresenter(this, stockProviderService, stockService);
-        setTitle(R.string.stock_detail);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_detail);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         long quoteId = getIntent().getLongExtra(QuoteColumns._ID, 0);
         graphHistory = (LineChart) findViewById(R.id.graph_history);
         progressWheel = (ProgressWheel) findViewById(R.id.progress_wheel);
+        textSymbol = (TextView) findViewById(R.id.text_symbol);
+        textBidPrice = (TextView) findViewById(R.id.text_bidPrice);
+        textChange = (TextView) findViewById(R.id.text_change);
         textError = (TextView) findViewById(R.id.text_error);
         stockDetailPresenter.loadQuoteSymbolForQuoteId(quoteId);
     }
@@ -70,6 +79,9 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
 
     @Override
     public void onQuoteLoaded(Quote quote) throws ParseException {
+        textSymbol.setText(quote.symbol);
+        textBidPrice.setText(quote.bidPrice());
+        textChange.setText(quote.change());
         stockDetailPresenter.loadOneMonthsHistoricalQuotes(quote.symbol, HistoricalQuoteDate.fromMilliseconds(System.currentTimeMillis()));
     }
 

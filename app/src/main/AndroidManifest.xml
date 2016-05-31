@@ -33,7 +33,8 @@
 
         <activity
             android:name="com.sam_chordas.android.stockhawk.ui.StockDetailActivity"
-            android:parentActivityName=".ui.MyStocksActivity" />
+            android:parentActivityName=".ui.MyStocksActivity"
+            android:theme="@style/theme_stock_detail" />
 
         <service
             android:name="com.sam_chordas.android.stockhawk.service.StockTaskService"
