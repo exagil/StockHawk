@@ -31,4 +31,6 @@
     <string name="stock_hawk">Stock Hawk</string>
     <string name="quote_bid_price">Bid Price: %s</string>
     <string name="quote_percent_change">Percent Change: %s%%</string>
+    <string name="stock_history_graph">Stock History Graph</string>
+    <string name="progress_loading_stocks_history">Please Wait! Loading Stock History</string>
 </resources>

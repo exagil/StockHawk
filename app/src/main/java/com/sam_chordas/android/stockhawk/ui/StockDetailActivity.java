@@ -80,10 +80,7 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
 
     @Override
     public void onQuoteLoaded(Quote quote) throws ParseException {
-        QuoteViewModel quoteViewModel = new QuoteViewModel(this, quote);
-        textSymbol.setText(quoteViewModel.symbol());
-        textBidPrice.setText(quoteViewModel.bidPrice());
-        textPercentChange.setText(quoteViewModel.percentChange());
+        showQuoteDetails(quote);
         stockDetailPresenter.loadOneMonthsHistoricalQuotes(quote.symbol, HistoricalQuoteDate.fromMilliseconds(System.currentTimeMillis()));
     }
 
@@ -93,6 +90,32 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
 
     @Override
     public void onOneMonthsHistoricalQuotesLoaded(List<HistoricalQuote> historicalQuotes) {
+        showGraph(historicalQuotes);
+    }
+
+    @Override
+    public void onOneMonthsHistoricalQuotesLoadFailure(String error) {
+        toggleGraphVisibility(LineChart.GONE, TextView.VISIBLE);
+        textError.setText(error);
+    }
+
+    private void toggleGraphVisibility(int graphVisibility, int textErrorVisibility) {
+        graphHistory.setVisibility(graphVisibility);
+        textError.setVisibility(textErrorVisibility);
+    }
+
+    private void showQuoteDetails(Quote quote) {
+        QuoteViewModel quoteViewModel = new QuoteViewModel(this, quote);
+        String symbol = quoteViewModel.symbol();
+        String bidPrice = quoteViewModel.bidPrice();
+        String percentChange = quoteViewModel.percentChange();
+        textSymbol.setText(symbol);
+        textSymbol.setContentDescription(quoteViewModel.stockSymbolDescription());
+        textBidPrice.setText(bidPrice);
+        textPercentChange.setText(percentChange);
+    }
+
+    private void showGraph(List<HistoricalQuote> historicalQuotes) {
         XAxis xAxis = graphHistory.getXAxis();
         LimitLine dateLimitLine = new LimitLine(140f, "Date");
         xAxis.addLimitLine(dateLimitLine);
@@ -117,16 +140,5 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
         graphHistory.invalidate();
         afterLoad();
         toggleGraphVisibility(LineChart.VISIBLE, TextView.GONE);
-    }
-
-    @Override
-    public void onOneMonthsHistoricalQuotesLoadFailure(String error) {
-        toggleGraphVisibility(LineChart.GONE, TextView.VISIBLE);
-        textError.setText(error);
-    }
-
-    private void toggleGraphVisibility(int graphVisibility, int textErrorVisibility) {
-        graphHistory.setVisibility(graphVisibility);
-        textError.setVisibility(textErrorVisibility);
     }
 }
