@@ -3,7 +3,7 @@ StockHawk
 
 StockHawk lets you discover the stocks you are interested in
 
-![Master View](http://res.cloudinary.com/chi6rag/image/upload/v1464684550/two_wdmzbt.png)  ![Detail View](http://res.cloudinary.com/chi6rag/image/upload/v1464684555/one_jpjewn.png)
+![Master View](http://res.cloudinary.com/chi6rag/image/upload/c_scale,w_300/v1464684550/two_wdmzbt.png)  ![Detail View](http://res.cloudinary.com/chi6rag/image/upload/c_scale,w_300/v1464684555/one_jpjewn.png)
 
 Build Instructions (Mac OS X)
 -----------------------------
