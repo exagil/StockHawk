@@ -45,7 +45,7 @@
                 android:textStyle="normal" />
 
             <TextView
-                android:id="@+id/text_change"
+                android:id="@+id/text_percent_change"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"

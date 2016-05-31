@@ -8,9 +8,9 @@ import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 
 public class Quote {
     public final String symbol;
-    private final Float percentChange;
+    public final Float percentChange;
     private final Float change;
-    private final Double bidPrice;
+    public final Double bidPrice;
     private final PersistableBoolean isUp;
     private final PersistableBoolean isCurrent;
 

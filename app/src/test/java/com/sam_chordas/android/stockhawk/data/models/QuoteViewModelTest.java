@@ -31,9 +31,9 @@ public class QuoteViewModelTest {
     @Test
     public void testThatQuoteViewModelKnowsHowToDisplayQuotePercentChange() {
         Context context = mock(Context.class);
-        when(context.getString(R.string.quote_percent_change)).thenReturn("%s%%");
+        when(context.getString(R.string.quote_percent_change)).thenReturn("Percent Change: %s%%");
         Quote quote = new Quote("FB", 1.23f, 4.56f, 9.99d, PersistableBoolean.TRUE, PersistableBoolean.FALSE);
         QuoteViewModel quoteViewModel = new QuoteViewModel(context, quote);
-        assertEquals("1.23%", quoteViewModel.percentChange());
+        assertEquals("Percent Change: 1.23%", quoteViewModel.percentChange());
     }
 }

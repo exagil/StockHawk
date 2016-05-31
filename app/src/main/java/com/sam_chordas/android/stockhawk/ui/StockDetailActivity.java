@@ -25,6 +25,7 @@ import com.sam_chordas.android.stockhawk.data.StockProviderService;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuoteDate;
 import com.sam_chordas.android.stockhawk.data.models.Quote;
+import com.sam_chordas.android.stockhawk.data.models.QuoteViewModel;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
     private ProgressWheel progressWheel;
     private TextView textSymbol;
     private TextView textBidPrice;
-    private TextView textChange;
+    private TextView textPercentChange;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,7 +63,7 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
         progressWheel = (ProgressWheel) findViewById(R.id.progress_wheel);
         textSymbol = (TextView) findViewById(R.id.text_symbol);
         textBidPrice = (TextView) findViewById(R.id.text_bidPrice);
-        textChange = (TextView) findViewById(R.id.text_change);
+        textPercentChange = (TextView) findViewById(R.id.text_percent_change);
         textError = (TextView) findViewById(R.id.text_error);
         stockDetailPresenter.loadQuoteSymbolForQuoteId(quoteId);
     }
@@ -79,9 +80,10 @@ public class StockDetailActivity extends AppCompatActivity implements StockDetai
 
     @Override
     public void onQuoteLoaded(Quote quote) throws ParseException {
-        textSymbol.setText(quote.symbol);
-        textBidPrice.setText(quote.bidPrice());
-        textChange.setText(quote.change());
+        QuoteViewModel quoteViewModel = new QuoteViewModel(this, quote);
+        textSymbol.setText(quoteViewModel.symbol());
+        textBidPrice.setText(quoteViewModel.bidPrice());
+        textPercentChange.setText(quoteViewModel.percentChange());
         stockDetailPresenter.loadOneMonthsHistoricalQuotes(quote.symbol, HistoricalQuoteDate.fromMilliseconds(System.currentTimeMillis()));
     }
 

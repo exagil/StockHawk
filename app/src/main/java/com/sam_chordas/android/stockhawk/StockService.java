@@ -6,14 +6,13 @@ import com.sam_chordas.android.stockhawk.data.StockProviderService;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuoteDate;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotes;
-import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotesResponse;
+import com.sam_chordas.android.stockhawk.data.dto.HistoricalQuotesResponse;
 import com.sam_chordas.android.stockhawk.data.models.NetworkError;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import rx.Subscriber;
 import rx.Subscription;

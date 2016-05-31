@@ -30,5 +30,5 @@
     <string name="todays_bid_prices">Today\'s Bid Prices</string>
     <string name="stock_hawk">Stock Hawk</string>
     <string name="quote_bid_price">Bid Price: %s</string>
-    <string name="quote_percent_change">%s\%</string>
+    <string name="quote_percent_change">Percent Change: %s%%</string>
 </resources>

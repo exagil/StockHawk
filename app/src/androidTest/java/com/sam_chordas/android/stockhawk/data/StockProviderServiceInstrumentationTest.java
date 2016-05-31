@@ -10,9 +10,9 @@ import com.sam_chordas.android.stockhawk.data.generated.HistoryProvider;
 import com.sam_chordas.android.stockhawk.data.generated.QuoteProvider;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuote;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuoteDate;
-import com.sam_chordas.android.stockhawk.data.models.HistoricalQuoteResponse;
+import com.sam_chordas.android.stockhawk.data.dto.HistoricalQuoteResponse;
 import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotes;
-import com.sam_chordas.android.stockhawk.data.models.HistoricalQuotesResponse;
+import com.sam_chordas.android.stockhawk.data.dto.HistoricalQuotesResponse;
 import com.sam_chordas.android.stockhawk.data.models.NullHistoricalQuotes;
 import com.sam_chordas.android.stockhawk.data.models.Quote;
 

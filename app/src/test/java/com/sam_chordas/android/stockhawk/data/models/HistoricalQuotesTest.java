@@ -3,6 +3,8 @@ package com.sam_chordas.android.stockhawk.data.models;
 import android.database.Cursor;
 
 import com.google.gson.Gson;
+import com.sam_chordas.android.stockhawk.data.dto.HistoricalQuoteResponse;
+import com.sam_chordas.android.stockhawk.data.dto.HistoricalQuotesResponse;
 
 import org.junit.Test;
 import org.mockito.Mockito;
