@@ -36,4 +36,13 @@ public class QuoteViewModelTest {
         QuoteViewModel quoteViewModel = new QuoteViewModel(context, quote);
         assertEquals("Percent Change: 1.23%", quoteViewModel.percentChange());
     }
+
+    @Test
+    public void testThatQuoteViewModelKnowsItsStockSymbolDescription() {
+        Context context = mock(Context.class);
+        when(context.getString(R.string.stock_symbol)).thenReturn("Stock Symbol %s");
+        Quote quote = new Quote("FB", 1.23f, 4.56f, 9.99d, PersistableBoolean.TRUE, PersistableBoolean.FALSE);
+        QuoteViewModel quoteViewModel = new QuoteViewModel(context, quote);
+        assertEquals("Stock Symbol FB", quoteViewModel.stockSymbolDescription());
+    }
 }

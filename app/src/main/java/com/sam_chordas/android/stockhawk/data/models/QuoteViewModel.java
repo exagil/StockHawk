@@ -24,4 +24,8 @@ public class QuoteViewModel {
     public String percentChange() {
         return String.format(context.getString(R.string.quote_percent_change), this.quote.percentChange);
     }
+
+    public String stockSymbolDescription() {
+        return String.format(context.getString(R.string.stock_symbol), this.quote.symbol);
+    }
 }
